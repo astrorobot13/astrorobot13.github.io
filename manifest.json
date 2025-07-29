@@ -1,0 +1,17 @@
+{
+  "short_name": "Radio",
+  "icons": [
+    {
+      "src": "/images/icon.svg",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/images/icon.png",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#202022",
+  "background_color": "#202022"
+}
