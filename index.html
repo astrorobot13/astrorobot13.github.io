@@ -149,6 +149,10 @@
           display: none;
         }
       }
+      button > img {
+        width: 1em;
+        height: 1em;
+      }
     </style>
   </head>
   <body>
@@ -375,7 +379,7 @@
         $("#playing")[0].remove();
       });
       $("audio").on("loadstart", () => {
-        
+        $("#pf").html("<img src=\"https://miro.medium.com/v2/resize:fit:946/1*QHTfTrNDMazdIE_KFwpMyA.gif\">");
       });
     </script>
   </body>
