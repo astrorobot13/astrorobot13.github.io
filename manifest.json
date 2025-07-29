@@ -2,8 +2,11 @@
   "short_name": "Radio",
   "icons": [
     {
-      "src": "/images/icon.svg",
-      "type": "image/svg+xml"
+      "src": "images/icon.png",
+      "sizes": "72x72 96x96 128x128 256x256"
+    },
+    {
+      "src": "icon/hd_hi.svg",
       "sizes": "any"
     }
   ],
