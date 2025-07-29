@@ -311,7 +311,7 @@
                 if (sec < 10) {
                   sec = `0${sec}`;
                 }
-                els = document.getElementsByClassName("track");
+                els = document.querySelectorAll(".track");
                 for (let i of els) {
                   if (i.getAttribute("url") == this.src) {
                     i.appendChild(document.createTextNode(`${min}:${sec}`));
