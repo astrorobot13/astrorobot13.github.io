@@ -2,12 +2,24 @@
   "short_name": "Radio",
   "icons": [
     {
-      "src": "images/icon.png",
-      "sizes": "72x72 96x96 128x128 256x256"
+      "src": "https://dummyimage.com/48.png",
+      "sizes": "48x48"
     },
     {
-      "src": "icon/hd_hi.svg",
-      "sizes": "any"
+      "src": "https://dummyimage.com/72.png",
+      "sizes": "72x72"
+    },
+    {
+      "src": "https://dummyimage.com/96.png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "https://dummyimage.com/128.png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "https://dummyimage.com/256.png",
+      "sizes": "256x256"
     }
   ],
   "start_url": "/",
