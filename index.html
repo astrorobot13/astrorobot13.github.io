@@ -150,6 +150,8 @@
           display: none;
         }
       }
+    </style>
+    <style id="css">
       button > img {
         width: 1em;
         height: 1em;
@@ -162,6 +164,8 @@
         <span>Track</span>
         <span>Duration</span>
       </div>
+      <input type="range" step="any" max="1">
+      <output></output>
     </div>
     <div style="width: 48px;">
       <button class="material-symbols-rounded" id="uploadTrack">playlist_add</button>
@@ -386,8 +390,13 @@
         $("#pf").html("<img src=\"https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif\">");
       });
       $("audio").on("loadstart", loadstart);
-      $("input[type=range]").on("input", () => {
-        
+      $("input[type=range]").on("input", function() {
+        $("#css").html(`
+        button > img {
+          width: ${this.value}em;
+          height: ${this.value}em;
+          margin: ${1 - parseFloat(this.value)}
+        }`);
       })
     </script>
   </body>
