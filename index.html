@@ -382,9 +382,13 @@
       $("audio").on("ended", () => {
         $("#playing")[0].remove();
       });
-      $("audio").on("loadstart", () => {
+      function loadstart() {
         $("#pf").html("<img src=\"https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif\">");
       });
+      $("audio").on("loadstart", loadstart);
+      $("input[type=range]").on("input", () => {
+        
+      })
     </script>
   </body>
 </html>
