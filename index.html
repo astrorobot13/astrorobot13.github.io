@@ -386,17 +386,19 @@
       $("audio").on("ended", () => {
         $("#playing")[0].remove();
       });
-      function loadstart() {
+      function showIndicator() {
         $("#pf").html("<img src=\"https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif\">");
       });
-      $("audio").on("loadstart", loadstart);
+      $("audio").on("loadstart", showIndicator
       $("input[type=range]").on("input", function() {
         $("#css").html(`
         button > img {
           width: ${this.value}em;
           height: ${this.value}em;
-          margin: ${1 - parseFloat(this.value)}
+          margin: ${1 - parseFloat(this.value)}em;
         }`);
+        $("output").text(this.value);
+        showIndicator();
       })
     </script>
   </body>
