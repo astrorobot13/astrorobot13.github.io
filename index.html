@@ -5,7 +5,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"/>
     <link rel="manifest" href="/manifest.json">
-    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
     <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
@@ -191,7 +191,7 @@
         <button class="material-symbols-rounded" id="pf">play_circle</button><button class="material-symbols-rounded">arrow_drop_up</button>
       </div>
     </footer>
-    <audio></audio>
+    <audio autoplay></audio>
     <pre></pre>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
     <script>
@@ -308,7 +308,6 @@
               $("#tracks")[0].appendChild(za);
               $(za).click(function() {
                 $("audio")[0].src = this.getAttribute("url");
-                $("audio")[0].play();
               });
               $(new Audio(za.getAttribute("url"))).on("loadedmetadata", function() {
                 const length = Math.round(this.duration);
