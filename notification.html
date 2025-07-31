@@ -39,17 +39,22 @@
   <script>
     $("button").click(function() {
       if (Notification.permission == "granted") {
-        n = new Notification("This is a title.", { body: "This is the body." });
+        n = new Notification("This is a title.", { 
+          body: "This is the body.", 
+          vibrate: [200, 100, 200],
+          requireInteraction: true,
+          tag: "abc"
+        });
       } else {
         Notification.requestPermission((result) => {
-          $("button").text("Permission" + result);
+          $("button").text("Permission " + result);
           setTimeout(() => {
             if (Notification.permission == "granted") {
               $("button").text("Send Notification");
             } else {
               $("button").text("Request Permission");
             }
-          }, 1000);
+          }, 2000);
         });
       }
     });
