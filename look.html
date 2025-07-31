@@ -22,8 +22,14 @@
       xhr = new XMLHttpRequest();
       xhr.open("GET", $("input").val());
       xhr.send();
+      $("pre").text("Loading...");
       xhr.onload = () => {
         $("pre").text(xhr.responseText);
+      }
+    });
+    $("input").keydown(() => {
+      if (event.key == "Enter") {
+        $("button")[0].click();
       }
     })
   </script>
