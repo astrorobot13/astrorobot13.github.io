@@ -42,7 +42,14 @@
         $("pre").text("Not finished yet");
       } else {
         Notification.requestPermission((result) => {
-          $("pre").text(result);
+          $("button").text("Permission" + result);
+          setTimeout(() => {
+            if (Notification.permission == "granted") {
+              $("button").text("Send Notification");
+            } else {
+              $("button").text("Request Permission");
+            }
+          }, 1000);
         });
       }
     });
