@@ -62,7 +62,7 @@
       }
     })
     function applyOptions() {
-      if ($("#j_p")[0].checked && xhr.getResponseHeader("Content-Type") == "application/json") {
+      if ($("#j_p")[0].checked && xhr.getResponseHeader("Content-Type").split(";")[0] == "application/json") {
         o = JSON.parse($("pre")[0].innerHTML);
         $("pre").text(JSON.stringify(o, null, 2));
       }
