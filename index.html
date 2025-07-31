@@ -398,7 +398,7 @@
         button > img {
           width: ${this.value}em;
           height: ${this.value}em;
-          padding: ${1 - parseFloat(this.value)}em;
+          padding: ${(1 - parseFloat(this.value)) / 2}em;
         }`);
         $("output").text(this.value);
         showIndicator();
