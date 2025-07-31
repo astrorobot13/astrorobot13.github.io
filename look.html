@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notification</title>
+  <meta http-equiv="cache-control" content="no-cache">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    body {
+      background-color: #202022;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <input type="text" placeholder="URL">
+  <button type="submit">Enter</button>
+  <pre></pre>
+  <script>
+    $("button").click(() => {
+      xhr = new XMLHttpRequest();
+      xhr.open("GET", $("input").val());
+      xhr.send();
+      xhr.onload = () => {
+        $("pre").text(xhr.responseText);
+      }
+    })
+  </script>
+</body>
+</html>
