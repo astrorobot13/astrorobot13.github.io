@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notification</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"/>
@@ -30,19 +29,20 @@
   <input type="text" placeholder="URL">
   <button type="submit">Enter</button>
   <p><span class="material-symbols-rounded">arrow_right</span>Options</p>
-  <div id="options">
+  <form id="options">
     <input type="checkbox" name="j_p">
     <label for="j_p">Pretty Print</label>
-  </div>
+  </form>
   <pre></pre>
   <script>
+    let xhr = new XMLHttpRequest();
     $("button").click(() => {
-      xhr = new XMLHttpRequest();
       xhr.open("GET", $("input").val());
       xhr.send();
       $("pre").text("Loading...");
       xhr.onload = () => {
         $("pre").text(xhr.responseText);
+        applyOptions();
       }
     });
     $("input").keydown(() => {
@@ -59,6 +59,13 @@
         $("#options").hide();
       }
     })
+    function applyOptions() {
+      if ($("#j_p")[0].checked && xhr.getResponseHeader("Content-Type") == "application/json") {
+        o = JSON.parse($("pre")[0].innerHTML);
+        $("pre").text(JSON.stringify(o, null, 2));
+      }
+    }
+    $("form").on("input", applyOptions);
   </script>
 </body>
 </html>
