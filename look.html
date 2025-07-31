@@ -34,6 +34,7 @@
     <label for="j_p">Pretty Print</label>
   </form>
   <pre></pre>
+  <output></output>
   <script>
     let xhr = new XMLHttpRequest();
     $("button").click(() => {
@@ -42,6 +43,7 @@
       $("pre").text("Loading...");
       xhr.onload = () => {
         $("pre").text(xhr.responseText);
+        $("output").text(xhr.getResponseHeader("Content-Type");
         applyOptions();
       }
     });
