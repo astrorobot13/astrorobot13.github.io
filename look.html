@@ -28,7 +28,7 @@
 <body>
   <input type="text" placeholder="URL">
   <button type="submit">Enter</button>
-  <p><span class="material-symbols-rounded">add</span>Options</p>
+  <p><span class="material-symbols-rounded">arrow_right</span>Options</p>
   <div id="options">
     <input type="checkbox" name="j_p">
     <label for="j_p">Pretty Print</label>
@@ -51,10 +51,10 @@
     })
     $("p").click(() => {
       if ($("span")[0].innerHTML == "add") {
-        $("span").text("subtract");
+        $("span").text("arrow_drop_down");
         $("#options").show();
       } else {
-        $("span").text("add");
+        $("span").text("arrow_right");
         $("#options").hide();
       }
     })
