@@ -1,3 +1,5 @@
 icon.png -- 480x480
 icon.ico -- 32x32
 icon.svg
+exclamation.png -- 128x128
+exclamation.svg
