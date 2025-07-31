@@ -279,7 +279,7 @@
           event.target.innerHTML = "play_circle";
           $("#p").text("play_arrow");
           $("audio")[0].pause();
-        } else {
+        } else if (event.target.innerHTML == "play_circle") {
           play();
         }
       });
