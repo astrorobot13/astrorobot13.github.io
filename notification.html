@@ -18,16 +18,10 @@
       display: none;
     }
     @media not (display-mode: standalone) {
-      body :not(#install) {
+      #install ~ * {
         display: none;
       }
       #install {
-        display: block;
-      }
-      
-    }
-    @media not (display-mode: standalone) {
-      #install * {
         display: block;
       }
     }
