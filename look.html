@@ -3,18 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"/>
   <meta http-equiv="cache-control" content="no-cache">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <style>
+    .material-symbols-rounded {
+      user-select: none;
+      -webkit-user-select: none;
+      font-size: 1em;
+    }
     body {
       background-color: #202022;
       color: white;
+      font-family: 'Roboto';
+    }
+    #options {
+      padding-left: 16px;
     }
   </style>
 </head>
 <body>
   <input type="text" placeholder="URL">
   <button type="submit">Enter</button>
+  <p><span class="material-symbols-rounded">add</span>Options</p>
+  <div id="options">
+    <input type="checkbox" name="j_p">
+    <label for="j_p">Pretty Print</label>
+  </div>
   <pre></pre>
   <script>
     $("button").click(() => {
@@ -25,13 +43,19 @@
       xhr.onload = () => {
         $("pre").text(xhr.responseText);
       }
-      xhr.onerror = () => {
-        $("pre").text("An error has occured.");
-      }
     });
     $("input").keydown(() => {
       if (event.key == "Enter") {
         $("button")[0].click();
+      }
+    })
+    $("p").click(() => {
+      if ($("span")[0].innerHTML == "add") {
+        $("span").text("subtract");
+        $("#options").show();
+      } else {
+        $("span").text("add");
+        $("#options").hide();
       }
     })
   </script>
