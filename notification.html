@@ -39,7 +39,7 @@
   <script>
     $("button").click(function() {
       if (Notification.permission == "granted") {
-        $("pre").text("Not finished yet");
+        n = new Notification("This is a title.", { body: "This is the body." });
       } else {
         Notification.requestPermission((result) => {
           $("button").text("Permission" + result);
