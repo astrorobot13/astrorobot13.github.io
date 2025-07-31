@@ -22,6 +22,7 @@
     }
     #options {
       padding-left: 16px;
+      display: none;
     }
   </style>
 </head>
@@ -50,7 +51,7 @@
       }
     })
     $("p").click(() => {
-      if ($("span")[0].innerHTML == "add") {
+      if ($("span")[0].innerHTML == "arrow_right") {
         $("span").text("arrow_drop_down");
         $("#options").show();
       } else {
