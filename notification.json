@@ -1,0 +1,19 @@
+{
+  "short_name": "Notification",
+  "icons": [
+    {
+      "src": "/images/exclamation.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/exclamation.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#202022",
+  "background_color": "#202022"
+}
