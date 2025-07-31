@@ -14,15 +14,20 @@
       color: white;
       font-family: 'Roboto';
     }
-    @media (not (display-mode: standalone)) {
-      /* All installed PWAs */
-      :not(#install) {
+    #install {
+      display: none;
+    }
+    @media not (display-mode: standalone) {
+      body :not(#install) {
         display: none;
       }
-      body {
+      #install {
         display: block;
       }
-      #install {
+      
+    }
+    @media not (display-mode: standalone) {
+      #install * {
         display: block;
       }
     }
