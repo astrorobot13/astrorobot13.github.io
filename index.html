@@ -402,7 +402,7 @@
       function addHandlers() {
         try {
         $("#errors").text("add");
-        event.target.removeEventListener(addHandlers);
+        event.target.removeEventListener("play", addHandlers);
         navigator.mediaSession.setActionHandler("play", play);
         navigator.mediaSession.setActionHandler("pause", () => {
           if ($("#pf")[0].innerHTML == "pause_circle") {
