@@ -177,7 +177,7 @@
         <button>Button</button>
       </div>
       <input type="checkbox">
-      <p id="errors">htm</p>
+      <p id="errors"></p>
     </div>
     <footer>
       <div class="trackMeta">
@@ -400,6 +400,7 @@
         $("#pf").html("<img src=\"https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif\">");
       });
       function addHandlers() {
+        $("#errors").text("add");
         event.target.removeEventListener(addHandlers);
         navigator.mediaSession.setActionHandler("play", play);
         navigator.mediaSession.setActionHandler("pause", () => {
