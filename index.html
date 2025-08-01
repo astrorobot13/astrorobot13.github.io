@@ -419,7 +419,7 @@
         });
         navigator.mediaSession.setActionHandler("seekto", (seekTime) => {
           try {
-          $("#errors").text(seekTime.toString());
+          $("#errors").text(JSON.stringify(seekTime));
           $("audio")[0].currentTime = seekTime;
           } catch(e) {
             $("#errors").text(e.mmessage);
