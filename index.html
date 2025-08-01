@@ -328,6 +328,7 @@
                     break;
                   }
                 }
+                this.remove();
               });
               getMetadata(i).then((meta) => {
                 if (!Object.hasOwn(meta, "artwork") && meta.title !== undefined) {
@@ -356,7 +357,15 @@
       });
       $("input[type=checkbox]").on("input", function() {
         $("audio")[0].muted = this.checked;
-      })
+      });
+      function getTrackElement(objectURL) {
+        const tracks = document.querySelectorAll(".track");
+        for (i = 0; i < tracks.length; i++) {
+          if (tracks[i].getAttribute("url") == objectURL) {
+            return tracks[i];
+          }
+        }
+      }
       $("audio").on("play", () => {
         const tracks = document.querySelectorAll(".track");
         for (i of tracks) {
@@ -390,6 +399,24 @@
       $("audio").on("loadstart", () => {
         $("#pf").html("<img src=\"https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif\">");
       });
+      function addHandlers() {
+        event.target.removeEventListener(addHandlers);
+        navigator.mediaSession.setActionHandler("play", play);
+        navigator.mediaSession.setActionHandler("pause", () => {
+          if ($("#pf")[0].innerHTML == "pause_circle") {
+            $("#pf")[0].click();
+          }
+        });
+        navigator.mediaSession.setActionHandler("nexttrack", () => {
+          track = getTrackElement($("audio")[0].src);
+          track.nextElementSibling.click();
+        });
+        navigator.mediaSession.setActionHandler("previoustrack", () => {
+          track = getTrackElement($("audio")[0].src);
+          track.previousElementSibling.click();
+        });
+      }
+      $("audio").on("play", addHandlers);
     </script>
   </body>
 </html>
