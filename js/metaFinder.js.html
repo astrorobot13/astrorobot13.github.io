@@ -1,0 +1,472 @@
+<meta http-equiv="cache-control" content="no-cache"><script>
+function getAll(url, async=false) {
+  const HttpReq = new XMLHttpRequest();
+  HttpReq.open("GET", url, async);
+  HttpReq.send();
+  return HttpReq;
+}
+function get(url) {
+  return getAll(url).responseText;
+}
+function getXML(url) {
+  return getAll(url).responseXML;
+}
+const reported = {
+  lost: false,
+  mrs_robinson: false,
+  b: false,
+  weezer: 0,
+  f: false,
+  muse: "", 
+  coldplay: false,
+  two: false
+}, stationInfo = [], radio = {
+  m3u8: {
+    cache: [],
+    meta_enabled: false,
+    url: ["https://ample-a.revma.ihrhls.com/", "/25_gotvkqv6ekku02/playlist.m3u8"],
+    log: false
+  },
+  log_date: false,
+  audacy: {
+    useImage: false
+  },
+  xhr: new XMLHttpRequest(),
+};
+radio.xhr.open("GET", "https://stream.revma.ihrhls.com/zc2525/hls.m3u8");
+radio.xhr.onload = () => {
+  radio.m3u8.url = radio.xhr.responseText.replaceAll(/#.*/g, "").split("zc2525")
+};
+radio.xhr.send();
+let usingCurrent = false;
+class iHeart {
+  title;
+  artist;
+  album;
+  imagePath;
+  docTitle;
+  linkTitle;
+  artwork;
+  whitespace;
+  constructor(station) {
+    var get_m3u8 = (s, t="") => {
+      if (radio.m3u8.cache) {
+        const to_remove = [];
+        for (let i of radio.m3u8.cache) {
+          if (performance.now() > i.expireTime) {
+            to_remove.push(i.index);
+          } else if (i.station == s) {
+            return i.meta;
+          }
+        }
+        to_remove.sort(function(a, b) { return b - a; });
+        for (let i of to_remove) {
+          radio.m3u8.cache.splice(i, 1);
+        }
+      }
+      var src = `${radio.m3u8.url[0]}zc${s}${radio.m3u8.url[1]}`;
+      let m1 = getAll(src);
+      m1 = m1.responseText.split("\n")[3];
+      if (m1 == undefined) {
+        m1 = '#EXTINF:10,';
+      }
+      m1 = m1.replace("#EXTINF:10,", "?").replaceAll("&", "%26").replace(',url="', "&").replaceAll(/\\|\"|(text=)/g, "");
+      m1 = m1.split("&");
+      m1[0] = m1[0].replaceAll(/\,a/g, "&a").replaceAll(/\,t/g, "&t");
+      if (m1.length == 1) {
+        m1 = m1.concat(["TPID=0"]);
+      } else {
+        m1[1] = m1[1].replaceAll(" ", "&"); }
+      m1 = `${m1[0]}&${m1[1]}`;
+      let parsed = new URLSearchParams(m1);
+      if (radio.m3u8.cache) {
+        radio.m3u8.cache.push({
+          station: s,
+          meta: parsed,
+          expireTime: performance.now() + 5000,
+          index: radio.m3u8.cache.length
+        });
+      }
+      return parsed;
+    }
+    var getMeta = (s) => {
+      var m = {
+        responseURL: ""
+      }
+      const time = new Date(performance.now() * 60).toString().toString();
+      var parsed = get_m3u8(s, time);
+      if ((parseInt(parsed.get("TPID")) > 0) || (radio.m3u8.meta_enabled && document.getElementById("m3u8_meta").checked && parsed.get("title") != null)) {
+        m.responseText = {
+          title: parsed.get("title"),
+          artist: parsed.get("artist"),
+          album: "",
+          albumId: 0,
+          trackId: parseInt(parsed.get("TPID")),
+          artistId: parseInt(parsed.get("TAID")),
+          imagePath: parsed.get("amgArtworkURL")
+        };
+        if (m.responseText.imagePath != null) {
+          m.responseText.imagePath = m.responseText.imagePath.replace(/(\?ops.*)|(^ )$/g, "").replace("195", "1400");
+        }
+        for (var i in m.responseText) {
+          if (m.responseText[i] === null) {
+            m.responseText[i] = "null";
+          } else if (((typeof m.responseText[i]) == "number") && isNaN(m.responseText[i])) {
+            m.responseText[i] = 0;
+          }
+        }
+        m.responseText.artist = m.responseText.artist.replace(/^ $/, "");
+        if (radio.m3u8.meta_enabled) {
+          m.responseText.album = document.getElementById("m3u8_default_album").value;
+        }
+        m.responseText = JSON.stringify(m.responseText);
+        m.status = 200;
+        m.statusText = "OK";
+      } else {
+        m.responseText = "";
+        m.status = 204;
+        m.statusText = "No Content";
+       }
+      return m;
+    }
+    this.whitespace = false;
+    let a, meta, first = false;
+    for (let i = 0; i <= stationInfo.length; i++) {
+      a = i;
+      if (stationInfo[i] != undefined && stationInfo[i].id == station) {
+        break;
+    } }
+    if (a == stationInfo.length) {
+      first = true;
+      let ab;
+      ab = getAll("https://api.iheart.com/api/v2/content/liveStations/" + station.toString());
+      if (ab.status == 200) {
+        stationInfo.push(JSON.parse(ab.responseText).hits[0]);
+      } else {
+        return {
+          status: ab.status,
+          statusText: ab.statusText
+        };
+      }
+      if (["FM", "AM"].includes(stationInfo[a].band)) {
+        stationInfo[a].callLetters = stationInfo[a].callLetters.split("-")[0];
+        stationInfo[a].markets[0].city += ", " + stationInfo[a].markets[0].stateAbbreviation;
+      } else if (stationInfo[a].band.match("HD") == null) {
+        stationInfo[a].callLetterAlias = stationInfo[a].callLetters;
+        stationInfo[a].callLetters = stationInfo[a].name;
+        stationInfo[a].markets[0].city = "iHeartRadio";
+      } else {
+        stationInfo[a].markets[0].city += ", " + stationInfo[a].markets[0].stateAbbreviation;
+      }
+      if (station == 9173) {
+        stationInfo[a].name = "CT 99.9";
+        stationInfo[a].description = "Peoria's Alternative";
+      } else if (station == 397) {
+        stationInfo[a].description = "Colorado Alternative";
+      } else if (station == 5280) {
+        stationInfo[a].description = "80s, 90s, and More Variety!";
+      } else if (station == 3401) {
+        stationInfo[a].logo += '?ops=fit(1400, 1400),format("png")';
+      } else if (station == 1349) {
+        stationInfo[a].name = "Rock 101";
+      } else if (station == 11125) {
+        stationInfo[a].description = "Alternative. Seattle.";
+      } else if (station == 10952) {
+        stationInfo[a].description = "New York's Alternative";
+      } else if (station == 10970) {
+        stationInfo[a].name = "Alt 102.1";
+        stationInfo[a].description = "Richmond's Alternative Rock";
+      }
+      if (stationInfo[a].name.match("ALT ")) {
+        stationInfo[a].name = stationInfo[a].name.replace("ALT", "Alt");
+      }
+    }
+    if (/*window.location.href.match("data:") ||*/ (radio.m3u8.meta_enabled && document.getElementById("m3u8_meta").checked) || station == 833 || station == 3236 || station == 5876) {
+      meta = getMeta(station);
+    } else {
+      meta = getAll(`https://api.iheart.com/api/v3/live-meta/stream/${station}/currentTrackMeta?defaultMetadata=true`);
+    }
+    if (radio.m3u8.log) {
+      console.log(meta);
+    }
+    let preset, pre = "";
+    if (meta.status != 204) {
+      meta = JSON.parse(meta.responseText);
+      this.title = meta.title;
+      this.artist = meta.artist;
+      this.album = meta.album;
+      this.imagePath = meta.imagePath;
+      preset = false;
+    }
+    if (meta.status == 204 || ((meta.trackId == 0) && !(radio.m3u8.meta_enabled && document.getElementById("m3u8_meta").checked))) {
+      this.title = stationInfo[a].name;
+      this.artist = stationInfo[a].description;
+      if (first && !(stationInfo[a].provider.match(/^Clear Channel.*$/)) && getAll(`https://api.iheart.com/api/v3/live-meta/stream/${station.toString()}/currentTrackMeta`).status == 410) {
+        this.album = {
+          match: (p) => {
+            return 410;
+          }
+        };
+      } else {
+        this.album = "";
+      }
+      this.imagePath = stationInfo[a].logo;
+      this.linkTitle = "Song Unavailable";
+      meta = {
+        trackId: 0,
+        albumId: 0,
+        artistId: 0
+      };
+      preset = true;
+      if (("mediaSession" in navigator) && usingCurrent) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: "title",
+          artist: "artist",
+          artwork: [
+            {
+              src: "https://dummyimage.com/1x1/fff/fff.png",
+              type: "image/png",
+              sizes: "1x1"
+            }
+          ]
+        });
+      }
+    } /*
+    Track / Title */
+    if ([1051566, 69559156, 234011567, 284743379, 284743380, 169530070, 205363391, 19437425, 44110683, 1017354, 17896716, 657892, 282535228, 318467869].includes(meta.trackId)) {
+      var parsed = get_m3u8(station, this.title);
+      const existing = this.title;
+      this.title = parsed.get("title"); 
+      if (parsed.get("TPID") != meta.trackId.toString()) {
+        this.title = existing;
+      } else if (meta.albumId == 234011566) {
+        this.album = "One More Time...";
+      } else if (meta.albumId == 284743378) {
+        this.album = "One More Time... Part-2";
+      } else if (meta.trackId == 169530070) {
+        this.album = "Let Go";
+        this.imagePath = "http://image.iheart.com/ihr-ingestion-pipeline-production-sbmg/A10301A0000278610J_20231207003249247/e43fbfec6dd6f416f869193521326b25.20126.jpg";
+      } else if (meta.trackId == 205363391) {
+        this.album = "Are We Having Fun?";
+      } else if ([19437425, 44110683].includes(meta.trackId) && parsed.get("artist")) {
+        this.artist = parsed.get("artist");
+        if (meta.trackId == 44110683) {
+          this.album = "Blurryface";
+          this.imagePath = "http://image.iheart.com/ihr-ingestion-pipeline-production-wmg/new_release/20240524022030990/075679928160/resources/dbbde1014cda9b101412a8e27add0ad2.jpg";
+        }
+      }
+    } else if ([287189264, 290029582].includes(meta.trackId)) {
+      this.album = "From Zero";
+    } else if (meta.trackId == 275434974) {
+      this.title = "feels<wbr>like<wbr>im<wbr>falling<wbr>in<wbr>love";
+      this.album = "Moon Music";
+      this.imagePath = "https://image.iheart.com/ihr-ingestion-pipeline-production-wmg/new_release/20241003141925864/5021732498762/resources/8f63a01593c329798544895109f36f8c.jpg?ops=fit(1425,1425)";
+      pre = `${meta.title} - ${this.artist} | `;
+      this.linkTitle = pre.split(" | ")[0];
+      preset = true;
+      this.whitespace = true;
+    } else if (this.album == "Moon Music" && this.artist == "Coldplay" && !reported.coldplay) {
+      get("/radio/report?text=" + meta.trackId.toString());
+      reported.coldplay = true;
+    } else if ([26079126, 15821791].includes(meta.trackId)) {
+      this.imagePath = "https://image.iheart.com/ihr-ingestion-pipeline-production-wmg/new_release/20211209202231141/5099902752952/resources/f4d581f4b86c869547704d7db9aa2c43.jpg";
+      this.album = "Gorillaz";
+    } else if ([26079129, 15821794].includes(meta.trackId)) {
+      this.album = "Demon Days";
+      this.imagePath = "http://image.iheart.com/content/music/prod/WMG4/Thumb_Content/Full_PC/WMG/Oct14/103114/0724387383852/resources/724387383852.jpg";
+    } else if (meta.trackId == 623267) {
+      this.artist = "Weezer";
+      this.album = "Make Believe";
+      this.imagePath = "https://image.iheart.com/bell-ingestion-pipeline-production-umg/full/00602517389366_20200520013130976/4d9341fda24f1582cf6c8b27e2d938bb.jpg";
+    } else if (this.title == "Lost" && !(meta.trackId == 211891320) ) {
+      this.album = "Meterora 20th Anniversary Edition";
+      if (!reported.lost) {
+        get("/radio/report?text=" + parsed.get("TPID")); // for single id
+        reported.lost = true;
+      }
+    } else if ([246361688, 250088603].includes(meta.trackId)) {
+      this.album = "Saviors";
+    } else if (this.title.match(/Father of Mine/i) && this.artist == "Everclear" && this.album.match(/So Much For The Afterglow/i) == null && !reported.f) {
+      get("/radio/report?text=" + parsed.get("TPID")); // for other album
+      reported.f = true;
+    } else if (meta.trackId == 39567918) {
+      this.album = "It's a Shame About Ray";
+      this.imagePath = "https://is3-ssl.mzstatic.com/image/thumb/Music126/v4/80/4a/9a/804a9a8a-e528-0a79-0f23-873dda3f5118/809236162403_cover.jpg/1400x1400.jpg";
+    } else if (meta.trackId == 18953989) {
+      this.imagePath = "https://upload.wikimedia.org/wikipedia/en/3/35/Muse_2nd_law.jpg";
+      this.album = "The 2nd Law";
+    } else if (this.album.match(/The .* Law/) && this.artist == "Muse" && !reported.two) {
+      get("/radio/report?text=" + meta.trackId.toString());
+      reported.two = false;
+    } else if (this.trackId == 229438849) {
+      this.artist = "Five Finger Death Punch / Kenny Wayne Shepherd / Brantley Gilbert / Brian May";
+    } else if (this.trackId == 234517397) {
+      this.title += " / We Are The Champions";
+    } else if (this.trackId == 326944608) {
+      this.imagePath = "https://i.iheart.com/v3/catalog/track/309810496?ops=fit(1400,1400),format(%22png%22)";
+    // Album
+    } else if ([286553453].includes(meta.albumId)) {
+      var parsed = get_m3u8(station);
+      if (parsed.get("TPID") == meta.trackId.toString()) {
+        this.title = parsed.get("title");
+        if (meta.albumId == 286553453) {
+          this.album = "One More Time... Part-2";
+        }
+      }
+    } else if (266815874 < meta.trackId && meta.trackId <= 266815887) {
+      this.imagePath = "";
+    } else if (this.album.match(/^It's a Shame About Ray/gi) && !reported.mrs_robinson && this.artist == "The Lemonheads") {
+      get("/radio/report?text=" + parsed.get("TPID"));  // for iHeart image
+      reported.mrs_robinson = true;
+    } else if ([79220664, 62551850].includes(meta.albumId)) {
+      this.album = "";
+    } else if (meta.albumId == 1022569) {
+      this.album = "Out of Time";
+    } else if ((meta.albumId == 42475449 && !(Object.hasOwn(meta, "version"))) || (meta.trackId == 42475454)) {
+      this.album = "The Black Parade";
+      this.imagePath = "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/7e/ac/69/7eac6998-7fa4-f1ab-9601-e8b791c736fa/mzi.fbpszunc.jpg/1400x1400bb.jpg";
+    } else if (this.album == "The Black Parade" && this.artist == "My Chemical Romance" && !reported.b) {
+      get("/radio/report?text=" + parsed.get("TPID")); // for iHeart image
+      reported.b = true;
+    } else if (meta.albumId == 830852) {
+      this.album = "DECEMBER<wbr>UNDERGROUND";
+      this.whitespace = true;
+    } else if (meta.albumId == 23990897) {
+      var parsed = get_m3u8(station);
+      if (parsed.get("TPID") == meta.trackId.toString()) {
+        this.artist = parsed.get("artist");
+        if (![1, 6, 11, 15, 16, 17, 18].includes(meta.trackId - meta.albumId)) {
+          this.title = parsed.get("title");
+        }
+      }
+    } else if (meta.albumId == 712009) {
+      this.album += " (Blue Album)";
+    } else if (meta.albumId == 578835) {
+      this.album += " (Green Album)";
+    } else if (this.album == "Weezer" && reported.weezer != meta.trackId) {
+      get("/radio/report?text=" + parsed.get("TPID")); // for id for += "(${color} Album)"
+      reported.weezer = meta.trackId;
+    } else if (meta.albumId == 295137800 && (meta.trackId - meta.albumId) < 14) {
+      this.imagePath = "http://image.iheart.com/ihr-ingestion-pipeline-production-wmg/new_release/20240913202135203/093624410669/resources/9e17c202b5ab081171f31c81eb32dc5d.jpg";
+    } else if (meta.albumId == 1056086) {
+      // Barenaked Ladies Greatest Hits
+    } else if (meta.albumId == 8637845) {
+      const trackNumber = meta.trackId - meta.albumId;
+      if (trackNumber <= 12) {
+        this.imagePath = "https://is1-ssl.mzstatic.com/image/thumb/Music1/v4/28/d3/f4/28d3f494-3740-5f4f-6177-c44ce99e529a/825646097340.jpg/1400x1400bb.jpg";
+        this.album = "Showbiz";
+      } else if (trackNumber <= 23) {
+        this.imagePath = "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/0c/c8/0b/0cc80b73-aa09-492d-4fcc-984cab29acfa/825646096909.jpg/1400x1400bb.jpg";
+        this.album = "Origin of Symmetry";
+      } else if (trackNumber <= 37) {
+        this.imagePath = "https://upload.wikimedia.org/wikipedia/en/b/b4/Muse_-_Absolution_Cover_UK.jpg";
+        this.album = "Absolution";
+      } else {
+        this.imagePath = "http://image.iheart.com/WMG4/Thumb_Content/Full_PC/WMG/Dec13/120913/825646911486/resources/fc457d27a8c0b7fc6f9b56fb94e22a0d.jpg";
+        this.album = "Black Holes and Revelations";
+      }
+    } else if (["Showbiz", "Origin of Symmetry", "Absolution"].includes(this.album) && this.artist == "Muse" && reported.muse != this.album) {
+      get("/radio/report?text=" + meta.trackId.toString()); // for iHeart images
+      reported.muse = this.album;
+    // Artist
+    } else if ([483280].includes(meta.artistId)) {
+      var parsed = get_m3u8(station);
+      if (parsed.get("TPID") == meta.trackId.toString()) {
+        this.artist = parsed.get("artist");
+      }
+    } else if (this.artist == "Goo Goo Dolls") {
+      this.artist = "The Goo Goo Dolls";
+    } else if (this.artistId == 44767491) {
+      this.artist = "Phoenix";
+    }
+    if (!this.imagePath.toString().match("http")) {
+      this.imagePath = "https://iheart.com/static/assets/placeholder.png";
+      meta.trackId = 0;
+    }
+    if (preset) {
+      this.docTitle = pre + stationInfo[a].callLetters;
+    } else {
+      this.docTitle = `${this.title} - ${this.artist} | ${stationInfo[a].callLetters}`;
+      this.linkTitle = this.title + " - " + this.artist;
+    }
+    this.artwork = [
+      {
+        src: this.imagePath,
+        sizes: "1400x1400",
+        type: "image/png"
+      }
+    ];
+    if (meta.trackId > 0) {
+      this.artwork[0].src += '?ops=fit(1400,1400),format("png")';
+    }
+  }
+}
+class findMeta extends iHeart {}
+class audacy {
+  constructor(stationCode, stationCall) {
+    const xy = JSON.parse(get(`https://api-nowplaying.amperwave.net/prt/nowplaying/2/1/${stationCode.toString()}/nowplaying.json`)).performances[0];
+    this.title = xy.title.replaceAll("   ", " / ");
+    this.artist = xy.artist.replaceAll("   ", " / ");
+    this.album = xy.album.replaceAll("   ", " / ");
+    this.largeimage = xy.largeimage;
+    this.artwork = [
+      {
+        src: `https://images.radio.com/logos/${stationCall.replace("-", "")}.jpg?width=1400`,
+        sizes: "1400x1400",
+        type: "image/webp"
+      }
+    ];
+  }
+}
+class tunegenie {
+  constructor(station) {
+    let source = JSON.parse(get(`https://api.tunegenie.com/v2/brand/nowplaying/?apiid=m2g_bar&b=${station}&count=1`));
+    if (source.length == 0) {
+      source = { 
+        sid: 0,
+        sslg: null,
+        aslg: null
+      };
+    } else {
+      source = source[0];
+    }
+    if (typeof source.sid != "number") {
+      source.sid = 0;
+    }
+    source = JSON.parse(get(`https://api.tunegenie.com/v2/music/track/?apiid=m2g_bar&b=${station}&sslg=${source.sslg}&aslg=${source.aslg}&sid=${source.sid}`));
+    this.title = source.song;
+    this.artist = source.artist;
+    this.album = source.album;
+    this.imagePath = source.artwork.replace("100x100", "1400x1400");
+    if (this.album.match(/^American Idiot/g)) {
+      this.album = "American Idiot";
+      this.imagePath = "https://image.iheart.com/ihr-ingestion-pipeline-production-wmg/new_release/20190219222051677/093624877769/resources/c14f698c45f445a5ba9dba395f26d642.jpg";
+      this.title = this.title.split(" (")[0];
+    } else if (source.sid == 1707258049) {
+      this.album = "One More Time";
+      this.title = this.album;
+    } else if (source.sid == 1763330286) {
+      this.title = "All In My Head";
+      this.album = "One More Time... Part-2";
+    } else if ([267536545, 267537169].includes(source.sid)) {
+      this.album = "Dizzy Up The Girl";
+      this.imagePath = "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/2c/13/18/2c131801-00af-58b1-3cc2-13abf4ad5416/093624919162.jpg/1400x1400bb.jpg";
+    } else if (source.sid == 1789791492) {
+      this.album = "From Zero";
+      this.imagePath = "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/69/21/cf/6921cff3-7074-118a-ece2-4012450e6c75/093624839811.jpg/1400x1400bb.jpg"
+    } else if (this.artist.match(/Grouplove/gi)) {
+      this.artist = "Grouplove";
+      if (source.sid == 453792997) {
+        this.album = "Never Trust a Happy Song";
+      }
+    }
+    this.artwork = [
+      {
+        src: this.imagePath,
+        sizes: "1400x1400",
+        type: "image/jpeg"
+      }
+    ];
+  }
+}
+</script>
