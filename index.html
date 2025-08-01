@@ -400,8 +400,6 @@
         $("#pf").html("<img src=\"https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif\">");
       });
       function addHandlers() {
-        try {
-        $("#errors").text("add");
         event.target.removeEventListener("play", addHandlers);
         navigator.mediaSession.setActionHandler("play", play);
         navigator.mediaSession.setActionHandler("pause", () => {
@@ -418,15 +416,8 @@
           track.previousElementSibling.click();
         });
         navigator.mediaSession.setActionHandler("seekto", (event) => {
-          try {
           $("audio")[0].currentTime = event.seekTime;
-          } catch(e) {
-            $("#errors").text(e.mmessage);
-          }
         });
-        } catch(e) {
-          $("#errors").text(e.message);
-        }
       }
       $("audio").on("play", addHandlers);
     </script>
