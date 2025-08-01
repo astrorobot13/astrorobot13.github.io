@@ -1,0 +1,468 @@
+<meta http-equiv="cache-control" content="no-cache"><script>
+if (window.location.href.match("switch")) {
+  document.title = "Switch";
+  radio.m3u8.meta_enabled = false;
+  style = document.createElement("style");
+  style.innerHTML = `
+  .container {
+    height: calc(100vh - calc(2.5vmin * 2));
+  }
+  #controls {
+    display: none;
+  }`;
+  document.head.appendChild(style);
+} else {
+  radio.m3u8.meta_enabled = true;
+  document.querySelector('input[type=file]').style.width = "calc(100% - 1rem)";
+  for (i of document.querySelectorAll("input[type=submit]")) {
+    i.style.setProperty("border", "0.08rem solid white");
+  }
+  document.getElementById("station").addEventListener("keydown", () => {
+    if (event.key == "Enter") {
+      changeStation(parseInt(event.target.value));
+    }
+  });
+}
+iHeartFinder = (meta) => {
+  meta = new iHeart(JSON.parse(meta));
+  if (meta.whitespace) {
+    meta.title = meta.title.replaceAll("<wbr>", "");
+    meta.artist = meta.artist.replaceAll("<wbr>", "");
+    meta.album = meta.album.replaceAll("<wbr>", "");
+  }
+  return meta;
+};
+audacyFinder = (meta) => {
+  meta = JSON.parse(meta);
+  meta = new audacy(meta[0], meta[1]);
+  img = document.getElementById("audacy-image");
+  img.setAttribute("errImg", meta.artwork[0].src);
+  img.src = meta.largeimage;
+  if (radio.audacy.useImage) {
+    meta.artwork[0].src = meta.largeimage;
+  }
+  return meta;
+};
+img = document.getElementById("audacy-image");
+img.addEventListener("load", () => {
+  radio.audacy.useImage = true;
+  console.log("load");
+  changeImage(event.target.src);
+});
+img.addEventListener("error", () => {
+  radio.audacy.useImage = false;
+  console.log("error");
+  changeImage(event.target.getAttribute("errImg"));
+});
+function changeImage(src1="https://dummyimage.com/1") {
+  const xy = {}, za = {};
+  for (i in navigator.mediaSession.metadata) {
+    xy[i] = navigator.mediaSession.metadata[i];
+  }
+  for (i in navigator.mediaSession.metadata.artwork[0]) {
+    za[i] = navigator.mediaSession.metadata.artwork[0][i];
+  }
+  xy.artwork = [za];
+  xy.artwork[0].src = src1;
+  navigator.mediaSession.metadata = new MediaMetadata(xy);
+  console.log(navigator.mediaSession.metadata);
+}
+const XML = {
+  parse: (string) => {
+    return new DOMParser().parseFromString(string, "text/xml");
+  },
+  get: (url) => {
+    const HttpReq = new XMLHttpRequest();
+    HttpReq.open("GET", url, false);
+    HttpReq.send();
+    return HttpReq.responseXML;
+} };
+const allStations = [
+  {
+    src: "https://stream.revma.ihrhls.com/zc4447",
+    hls: "https://stream.revma.ihrhls.com/zc4447/hls.m3u8",
+    metaLoc: "https://api.iheart.com/api/v3/live-meta/stream/4447/currentTrackMeta",
+    getMeta: (meta) => {
+      if (meta == "") {
+        meta = {
+          title: "ALT Radio",
+          artist: "Alternative Hits",
+          artwork: [
+            {
+              src: "https://i.iheart.com/v3/re/assets.streams/66a2a4d762ed542f0901aefb",
+              type: "image/webp",
+              sizes: "1200x1200"
+            }
+          ]
+        }
+      } else {
+        meta = JSON.parse(meta);
+        meta.artwork = [
+          {
+            src: meta.imagePath,
+            type: "image/jpeg",
+            sizes: "480x480"
+          }
+        ];
+      }
+      return meta;
+    }
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc2281",
+    hls: "https://stream.revma.ihrhls.com/zc2281/hls.m3u8",
+    metaLoc: "data:text/plain,2281",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc397",
+    hls: "https://stream.revma.ihrhls.com/zc397/hls.m3u8",
+    metaLoc: "data:text/plain,397",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc2525",
+    hls: "https://stream.revma.ihrhls.com/zc2525/hls.m3u8",
+    metaLoc: "data:text/plain,2525",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc201",
+    hls: "https://stream.revma.ihrhls.com/zc201/hls.m3u8",
+    metaLoc: "data:text/plain,201",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc1397",
+    hls: "https://stream.revma.ihrhls.com/zc1397/hls.m3u8",
+    metaLoc: "data:text/plain,1397",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc3401",
+    hls: "https://stream.revma.ihrhls.com/zc3401/hls.m3u8",
+    metaLoc: "data:text/plain,3401",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc3332",
+    hls: "https://stream.revma.ihrhls.com/zc3332/hls.m3u8",
+    metaLoc: "data:text/plain,3332",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc949",
+    hls: "https://stream.revma.ihrhls.com/zc949/hls.m3u8",
+    metaLoc: "data:text/plain,949",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc2593",
+    hls: "https://stream.revma.ihrhls.com/zc2593/hls.m3u8",
+    metaLoc: "data:text/plain,2593",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc6384",
+    hls: "https://stream.revma.ihrhls.com/zc6384/hls.m3u8",
+    metaLoc: "data:text/plain,6384",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc7053",
+    hls: "https://stream.revma.ihrhls.com/zc7053/hls.m3u8",
+    metaLoc: "data:text/plain,7053",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc9614",
+    hls: "https://stream.revma.ihrhls.com/zc9614/hls.m3u8",
+    metaLoc: "data:text/plain,9614",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc6959",
+    hls: "https://stream.revma.ihrhls.com/zc6959/hls.m3u8",
+    metaLoc: "data:text/plain,6959",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://crystalout.surfernetwork.com:8001/WMRQ_MP3",
+    hls: "https://crystalout.surfernetwork.com:8001/WMRQ_MP3",
+    metaLoc: "https://lightningstream.com/BBridge.asmx/GetPlaylistCV?call=wmrq&accesskey=tKVktWzN3KI=&debug=true&songlistcount=1",
+    getMeta: (source) => {
+      source = JSON.parse(XML.parse(source).firstChild.childNodes[0].nodeValue)[0];
+      source1 = {
+        title: source.title,
+        artist: source.artist,
+        album: "",
+        CoverLargeUrl: source.coverlarge
+      };
+      source = JSON.parse(XML.get(`https://lightningstream.com/BBridge.asmx/GetAT?call=wmrq&accesskey=tKVktWzN3KI=&debug=true&artist=${source.artist.toUpperCase()}&title=${source.title.toUpperCase()}`).firstChild.childNodes[0].nodeValue);
+      source.title = source.SongTitle;
+      if ([undefined, ""].includes(source.title)) {
+        source = source1;
+      } else {
+        source.artist = source.Artist;
+        source.album = source.AlbumTitle;
+      }
+      if (source.CoverLargeUrl == "") {
+        source.CoverLargeUrl = "https://cdn-radiotime-logos.tunein.com/s21226d.png";
+      }
+      source.artwork = [
+        {
+          src: source.CoverLargeUrl,
+          sizes: "180x180",
+          type: source.imageType
+        }
+      ];
+      return source;
+    }
+  },
+  {
+    src: "https://playerservices.streamtheworld.com/api/livestream-redirect/WBTZFMAAC.aac",
+    hls: "https://playerservices.streamtheworld.com/api/livestream-redirect/WBTZFMAAC.aac",
+    metaLoc: "data:text/plain,wbtz",
+    getMeta: (source) => {
+      source = new tunegenie("wbtz");
+      if (source.title == null) {
+        source.artwork = [
+          {
+            src: source.artwork.replace("100x100", "1400x1400"),
+            sizes: "349x215",
+            type: "image/jpeg"
+          }
+        ];
+        source.song = "99.9 The Buzz";
+        source.artist = "";
+        source.album = "";
+      }
+      return source;
+    }
+  },
+  { // http://3.236.187.244/audacy-winshd2aac-imc
+    src: "https://stream.abacast.net/direct/audacy-winshd2aac-imc", 
+    hls: "https://stream.abacast.net/direct/audacy-winshd2aac-imc",
+    metaLoc: 'data:text/plain,10952',
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.abacast.net/direct/audacy-wrxlfmaac-imc", 
+    hls: "https://stream.abacast.net/direct/audacy-wrxlfmaac-imc",
+    metaLoc: 'data:text/plain,10970',
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.abacast.net/direct/audacy-kvilfmaac-imc", 
+    hls: "https://stream.abacast.net/direct/audacy-kvilfmaac-imc",
+    metaLoc: 'data:text/plain,10838',
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc833",
+    hls: "https://stream.revma.ihrhls.com/zc833/hls.m3u8",
+    metaLoc: "data:text/plain,833",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc3236",
+    hls: "https://stream.revma.ihrhls.com/zc3236/hls.m3u8",
+    metaLoc: "data:text/plain,3236",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc1597",
+    hls: "https://stream.revma.ihrhls.com/zc1597/hls.m3u8",
+    metaLoc: "data:text/plain,1597",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc10098",
+    hls: "https://stream.revma.ihrhls.com/zc10098/hls.m3u8",
+    metaLoc: "data:text/plain,10098",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://playerservices.streamtheworld.com/api/livestream-redirect/KXTEFMAAC_SC",
+    hls: "https://playerservices.streamtheworld.com/api/livestream-redirect/KXTEFMAAC_SC",
+    metaLoc: "https://nowplaying.bbgi.com/kxtefm/list?limit=1",
+    getMeta: (source) => {
+      source = JSON.parse(source)[0];
+      source.artwork = [{
+        src: "https://images.radio.com/aud-opsconsole-media-images-prod-prod/X1075-1724335430182.jpg",
+        type: "image/jpeg",
+        sizes: "1080x1080"
+      }];
+      source.title = source.title.replaceAll("&apos;", "'");
+      return source;
+    }
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc6134",
+    hls: "https://stream.revma.ihrhls.com/zc6134/hls.m3u8",
+    metaLoc: "data:text/plain,6134",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc5876",
+    hls: "https://stream.revma.ihrhls.com/zc5876/hls.m3u8",
+    metaLoc: "data:text/plain,5876",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.abacast.net/direct/audacy-knddfmaac-imc", 
+    hls: "https://stream.abacast.net/direct/audacy-knddfmaac-imc",
+    metaLoc: 'data:text/plain,11125',
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc7727",
+    hls: "https://stream.revma.ihrhls.com/zc7727/hls.m3u8",
+    metaLoc: "data:text/plain,7727",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc1701",
+    hls: "https://stream.revma.ihrhls.com/zc1701/hls.m3u8",
+    metaLoc: "data:text/plain,1701",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.revma.ihrhls.com/zc2804",
+    hls: "https://stream.revma.ihrhls.com/zc2804/hls.m3u8",
+    metaLoc: "data:text/plain,2804",
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.abacast.net/direct/audacy-kbztfmaac-imc", 
+    hls: "https://stream.abacast.net/direct/audacy-kbztfmaac-imc",
+    metaLoc: 'data:text/plain,11130',
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.abacast.net/direct/audacy-wsfsfmaac-imc", 
+    hls: "https://stream.abacast.net/direct/audacy-wsfsfmaac-imc",
+    metaLoc: 'data:text/plain,10962',
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.abacast.net/direct/audacy-knkrfmaac-imc", 
+    hls: "https://stream.abacast.net/direct/audacy-knkrfmaac-imc",
+    metaLoc: 'data:text/plain,10966',
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.abacast.net/direct/audacy-kkdofmaac-imc", 
+    hls: "https://stream.abacast.net/direct/audacy-kkdofmaac-imc",
+    metaLoc: 'data:text/plain,11001',
+    getMeta: iHeartFinder
+  },
+  {
+    src: "https://stream.abacast.net/direct/audacy-kroqfmaac-imc", 
+    hls: "https://stream.abacast.net/direct/audacy-kroqfmaac-imc",
+    metaLoc: 'data:text/plain,10905',
+    getMeta: iHeartFinder
+  },
+];
+document.getElementById("station").setAttribute("placeholder", allStations.length.toString());
+Math.randrange = (min, max) => {
+  return Math.floor(Math.random() * ((max-min) + 1)) + min;
+};
+let noInterval = true, currentStream = allStations.length + 1, intervals = [], ab, cd, evt;
+radio.m3u8.meta_enabled = true;
+function reloadStream() {
+  xy = currentStream;
+  currentStream = 4.2 * 10 ** 42;
+  changeStation(xy);
+};
+cd = setInterval(() => {
+  if (!document.getElementsByTagName("audio")[0].paused) {
+    navigator.mediaSession.setActionHandler("nexttrack", () => { changeStation(); });
+    navigator.mediaSession.setActionHandler("play", reloadStream);
+    navigator.mediaSession.setActionHandler("pause", () => { document.querySelector("audio").pause(); });
+    if (document.querySelector('input[type=file]').style.width) {
+      navigator.mediaSession.setActionHandler("previoustrack", () => {
+        document.getElementById("m3u8_meta").checked = !document.getElementById("m3u8_meta").checked;
+      });
+    } else {
+      navigator.mediaSession.setActionHandler("previoustrack", () => {});
+    }
+    clearInterval(cd);
+  }
+}, 30);
+function changeStation(xy=currentStream) {
+  while (xy == currentStream) {
+    xy = Math.randrange(0, allStations.length - 1);
+  }
+  currentStream = xy;
+  const currentStation = allStations[currentStream], audio = document.getElementsByTagName("audio")[0];
+  audio.pause();
+  if (navigator.userAgent.match("Safari") && get("https://api.ipify.org") == "72.93.211.131") {
+    audio.src = currentStation.hls;
+  } else {
+    audio.src = currentStation.src;
+  }
+  if (intervals.length == 0) {
+    intervals[intervals.length] = setInterval(updateMeta, 5000);
+  }
+}
+var artwork;
+function updateMeta() {
+  evt = event;
+  xhr = getAll(allStations[currentStream].metaLoc, true);
+  xhr.onload = () => {
+    meta = allStations[currentStream].getMeta(xhr.responseText);
+    artwork = meta.artwork;
+    if ((!document.getElementById("artwork").checked) && (meta.album != "")) {
+      delete meta.artwork;
+    }
+    n = new MediaMetadata(meta);
+    if (n != navigator.mediaSession.metadata) {
+      navigator.mediaSession.metadata = n;
+      console.log(navigator.mediaSession.metadata);
+    }
+    if (evt != undefined && (navigator.mediaSession.metadata.artist.match(/(Cranberries)|(Daft Punk)|(Justice)|(4.Non.Blon.*s$)|(Eminem)|(Beastie Boys)/gi) || navigator.mediaSession.metadata.title.match(/(Bitter.*Sweet Symphony)/i))) {
+      changeStation();
+    }
+  }
+}
+document.getElementById("artwork").addEventListener("input", () => {
+  meta = navigator.mediaSession.metadata;
+  if (event.target.checked) {
+    meta.artwork = artwork;
+  } else {
+    delete meta.artwork;
+  }
+  navigator.mediaSession.metadata = new MediaMetadata(meta);
+});
+function runner() {
+  for (i of intervals) {
+    clearInterval(i);
+  }
+  intervals = [];
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: document.getElementsByName("title")[0].value,
+    artist: document.getElementsByName("artist")[0].value,
+    album: document.getElementsByName("album")[0].value,
+    artwork: [{
+      src: document.getElementsByName("artwork")[0].value,
+      sizes: "1x1",
+      type: document.getElementsByName("type")[0].value
+    }]
+  });
+}
+function restarter() {
+  if (intervals.length == 0) {
+    intervals.push(setInterval(updateMeta, 5000));
+  }
+  updateMeta();
+}
+function addScript() {
+  newScript = document.createElement("script");
+  newScript.src = URL.createObjectURL(document.getElementById("newScript").files[0]);
+  document.body.appendChild(newScript);
+  newScript.onload = () => {
+    URL.revokeObjectURL(event.target.src);
+  }
+}
+</script>
