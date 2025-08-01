@@ -417,10 +417,9 @@
           track = getTrackElement($("audio")[0].src);
           track.previousElementSibling.click();
         });
-        navigator.mediaSession.setActionHandler("seekto", (seekTime) => {
+        navigator.mediaSession.setActionHandler("seekto", (event) => {
           try {
-          $("#errors").text(JSON.stringify(seekTime));
-          $("audio")[0].currentTime = seekTime;
+          $("audio")[0].currentTime = event.seekTime;
           } catch(e) {
             $("#errors").text(e.mmessage);
           }
