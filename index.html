@@ -418,8 +418,12 @@
           track.previousElementSibling.click();
         });
         navigator.mediaSession.setActionHandler("seekto", (seekTime) => {
-          $("#errors").text(seekTime);
+          try {
+          $("#errors").text(seekTime.toString());
           $("audio")[0].currentTime = seekTime;
+          } catch(e) {
+            $("#errors").text(e.mmessage);
+          }
         });
         } catch(e) {
           $("#errors").text(e.message);
