@@ -400,6 +400,7 @@
         $("#pf").html("<img src=\"https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif\">");
       });
       function addHandlers() {
+        try {
         $("#errors").text("add");
         event.target.removeEventListener(addHandlers);
         navigator.mediaSession.setActionHandler("play", play);
@@ -416,6 +417,9 @@
           track = getTrackElement($("audio")[0].src);
           track.previousElementSibling.click();
         });
+        } catch(e) {
+          $("#errors").text(e.message);
+        }
       }
       $("audio").on("play", addHandlers);
     </script>
