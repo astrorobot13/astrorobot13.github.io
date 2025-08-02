@@ -178,12 +178,14 @@ class iHeart {
       } else if (station == 10970) {
         stationInfo[a].name = "Alt 102.1";
         stationInfo[a].description = "Richmond's Alternative Rock";
+      } else if (station == 11130) {
+        stationInfo[a].name = "Alt 94.9";
       }
       if (stationInfo[a].name.match("ALT ")) {
         stationInfo[a].name = stationInfo[a].name.replace("ALT", "Alt");
       }
     }
-    if (/*window.location.href.match("data:") ||*/ (radio.m3u8.meta_enabled && document.getElementById("m3u8_meta").checked) || station == 833 || station == 3236 || station == 5876) {
+    if (/*window.location.href.match("data:") ||*/ (radio.m3u8.meta_enabled && document.getElementById("m3u8_meta").checked) || [833, 3236, 5876].includes(station)) {
       meta = getMeta(station);
     } else {
       meta = getAll(`https://api.iheart.com/api/v3/live-meta/stream/${station}/currentTrackMeta?defaultMetadata=true`);
@@ -328,7 +330,7 @@ class iHeart {
       this.album = "The Black Parade";
       this.imagePath = "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/7e/ac/69/7eac6998-7fa4-f1ab-9601-e8b791c736fa/mzi.fbpszunc.jpg/1400x1400bb.jpg";
     } else if (this.album == "The Black Parade" && this.artist == "My Chemical Romance" && !reported.b) {
-      get("/radio/report?text=" + parsed.get("TPID")); // for iHeart image
+      getAll("/radio/report?text=" + parsed.get("TPID"), true); // for iHeart image
       reported.b = true;
     } else if (meta.albumId == 830852) {
       this.album = "DECEMBER<wbr>UNDERGROUND";
@@ -378,7 +380,7 @@ class iHeart {
       }
     } else if (this.artist == "Goo Goo Dolls") {
       this.artist = "The Goo Goo Dolls";
-    } else if (this.artistId == 44767491) {
+    } if (this.artistId == 44767491) {
       this.artist = "Phoenix";
     }
     if (!this.imagePath.toString().match("http")) {
