@@ -1,5 +1,4 @@
 <!doctype html>
-<!-- This is a comment. -->
 <html>
   <head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -182,7 +181,7 @@
     </div>
     <footer>
       <div class="trackMeta">
-        <img src="https://dummyimage.com/50x50">
+        <img src="data:image/png,">
         <div>
           <b>Not playing</b>
           <span></span>
@@ -226,6 +225,16 @@
             }
           });
         });
+      }
+      function swapDom(a, b) {
+        let aParent = a.parentNode;
+        let bParent = b.parentNode;
+        let aHolder = document.createElement(`div`);
+        let bHolder = document.createElement(`div`);
+        aParent.replaceChild(aHolder, a);
+        bParent.replaceChild(bHolder, b);
+        aParent.replaceChild(b, aHolder);
+        bParent.replaceChild(a, bHolder);
       }
       function shuffle(arr) {
         let currentIndex = arr.length;
