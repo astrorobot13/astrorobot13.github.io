@@ -163,7 +163,7 @@
   </head>
   <body>
     <div id="tracks">
-      <div class="track">
+      <div class="track" id="labels">
         <span>Track</span>
         <span>Duration</span>
       </div>
@@ -226,6 +226,7 @@
           });
         });
       }
+      // https://github.com/drag-drop-touch-js/dragdroptouch/blob/master/demo/index.js
       function swapDom(a, b) {
         let aParent = a.parentNode;
         let bParent = b.parentNode;
@@ -236,14 +237,11 @@
         aParent.replaceChild(b, aHolder);
         bParent.replaceChild(a, bHolder);
       }
-      function shuffle(arr) {
-        let currentIndex = arr.length;
-        array = [];
-        for (i = 0; i < arr.length; i++) {
-          array[i] = arr[i];
-        }
+      function shuffle() {
+        let currentIndex = $(".track:not(#labels)").length;
         // While there remain elements to shuffle...
         while (currentIndex != 0) {
+          array = $(".track:not(#labels)");
           // Pick a remaining element...
           let randomIndex = Math.floor(Math.random() * currentIndex);
           currentIndex--;
