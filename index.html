@@ -238,7 +238,7 @@
         bParent.replaceChild(a, bHolder);
       }
       function shuffle() {
-        let currentIndex = $(".track:not(#labels)").length;
+        let currentIndex = $(".track:not(#labels)").length - 1;
         // While there remain elements to shuffle...
         while (currentIndex != 0) {
           array = $(".track:not(#labels)");
