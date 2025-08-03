@@ -382,7 +382,7 @@
             } else {
               this[argv[0]] = parseInt(argv[2]);
             }
-            if (this.red + this.blue > this.limit) {
+            if (total(argv[0]) > 44) {
               this[argv[0]] -= 1;
             }
             if (this[argv[0]] < 0) {
@@ -499,6 +499,13 @@
       goals.push(new goal("Long Goal 2", 15, 10));
       goals.push(new goal("Upper Center Goal", 7, 8));
       goals.push(new goal("Lower Center Goal", 7, 6));
+      function total(alliance) {
+        var t = 0;
+        for (let i of goals) {
+          t += i[alliance];
+        }
+        return t;
+      }
       var newOnClick = (event) => {
         const checked = event.target.lastChild.checked;
         event.target.lastChild.checked = !checked;
@@ -506,9 +513,9 @@
       };
       $("#red_auto").click(newOnClick);
       $("#blue_auto").click(newOnClick);
-      // -----------------------
       parked = document.createElement("div");
       parked.className = "panel";
+      // -----------------------
       xy = document.createElement("h3");
       xy.innerHTML = "Parked";
       parked.appendChild(xy);
@@ -552,8 +559,8 @@
       });
       function score() {
         let red_total = 0, blue_total = 0;
-        const red_auto = $("#red_auto")[0].lastElementChild.checked;
-        const blue_auto = $("#blue_auto")[0].lastElementChild.checked;
+        const red_auto = $("#red_auto > input")[0].checked;
+        const blue_auto = $("#blue_auto > input")[0].checked;
         if (red_auto && blue_auto) {
           red_total = 5;
           blue_total = 5;
