@@ -419,11 +419,11 @@
         });
         navigator.mediaSession.setActionHandler("nexttrack", () => {
           track = getTrackElement($("audio")[0].src);
-          track.nextElementSibling.click();
+          $("audio")[0].src = track.previousElementSibling.getAttribute("url");
         });
         navigator.mediaSession.setActionHandler("previoustrack", () => {
           track = getTrackElement($("audio")[0].src);
-          track.previousElementSibling.click();
+          $("audio")[0].src = track.previousElementSibling.getAttribute("url");
         });
         navigator.mediaSession.setActionHandler("seekto", (event) => {
           $("audio")[0].currentTime = event.seekTime;
