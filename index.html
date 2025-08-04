@@ -159,6 +159,9 @@
         height: .7em;
         margin: .15em;
       }
+      #mute {
+        font-variation-settings: 'FILL' 1;
+      }
     </style>
   </head>
   <body>
@@ -176,7 +179,7 @@
       <div id="options">
         <button>Button</button>
       </div>
-      <input type="checkbox">
+      <button class="material-symbols-rounded" id="mute">volume_up</button>
       <p id="errors"></p>
     </div>
     <footer>
@@ -359,8 +362,14 @@
         }
         xy.click();
       });
-      $("input[type=checkbox]").on("input", function() {
-        $("audio")[0].muted = this.checked;
+      $("#mute").on("input", function() {
+        if (this.innerHTML == "volume_up") {
+          $("audio")[0].muted = true;
+          this.innerHTML = "volume_off";
+        } else {
+          $("audio")[0].muted = false;
+          this.innerHTML = "volume_up";
+        }
       });
       function getTrackElement(objectURL) {
         const tracks = document.querySelectorAll(".track");
