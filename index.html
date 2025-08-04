@@ -35,11 +35,6 @@
         font-size: 48px;
         font-variation-settings: 'wght' 300;
       }
-      #p {
-        font-variation-settings: 'FILL' 1;
-        font-size: 40px;
-        padding: 4px;
-      }
       input[type="file"] {
         display: none;
       }
@@ -159,8 +154,10 @@
         height: .7em;
         margin: .15em;
       }
-      #mute {
+      #p, #mute {
         font-variation-settings: 'FILL' 1;
+        font-size: 40px;
+        padding: 4px;
       }
     </style>
   </head>
@@ -362,7 +359,7 @@
         }
         xy.click();
       });
-      $("#mute").on("input", function() {
+      $("#mute").click(function() {
         if (this.innerHTML == "volume_up") {
           $("audio")[0].muted = true;
           this.innerHTML = "volume_off";
