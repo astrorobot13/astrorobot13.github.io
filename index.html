@@ -176,6 +176,7 @@
       <div id="options">
         <button>Button</button>
       </div>
+      <button id="swap">Swap</button>
       <input type="checkbox">
       <p id="errors"></p>
     </div>
@@ -250,6 +251,9 @@
           swapDom(array[currentIndex], array[randomIndex]);
         }
       }
+      $("#swap").click(() => {
+        swapDom($(".track")[1], $(".track")[2]);
+      });
       function play() {
         audio = $("audio")[0];
         if (audio.ended) {
