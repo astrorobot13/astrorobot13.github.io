@@ -238,10 +238,11 @@
         bParent.replaceChild(a, bHolder);
       }
       function shuffle() {
-        let currentIndex = document.querySelectorAll(".track:not(#labels)").length;
+        array = document.querySelectorAll(".track:not(#labels)");
+        let currentIndex = array.length;
         // While there remain elements to shuffle...
         while (currentIndex != 0) {
-          // array = document.querySelectorAll(".track:not(#labels)");
+          array = document.querySelectorAll(".track:not(#labels)");
           // Pick a remaining element...
           let randomIndex = Math.floor(Math.random() * currentIndex);
           currentIndex--;
