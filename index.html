@@ -176,7 +176,6 @@
       <div id="options">
         <button>Button</button>
       </div>
-      <button id="swap">Swap</button>
       <input type="checkbox">
       <p id="errors"></p>
     </div>
@@ -253,13 +252,10 @@
           }
         }
       }
-      $("#swap").click(() => {
-        swapDom($(".track")[1], $(".track")[2]);
-      });
       function play() {
         audio = $("audio")[0];
         if (audio.ended) {
-          $("#playing").parent().next()[0].click();
+          audio.src = $("#playing").parent().next()[0].getAttribute("url");
         } else if (audio.src == "") {
           try {
             $(".track")[1].click();
@@ -417,7 +413,7 @@
         });
         navigator.mediaSession.setActionHandler("nexttrack", () => {
           track = getTrackElement($("audio")[0].src);
-          $("audio")[0].src = track.previousElementSibling.getAttribute("url");
+          $("audio")[0].src = track.nextElementSibling.getAttribute("url");
         });
         navigator.mediaSession.setActionHandler("previoustrack", () => {
           track = getTrackElement($("audio")[0].src);
