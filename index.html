@@ -248,7 +248,9 @@
           let randomIndex = Math.floor(Math.random() * currentIndex);
           currentIndex--;
           // And swap it with the current element.
-          swapDom(array[currentIndex], array[randomIndex]);
+          if (currentIndex != randomIndex) {
+            swapDom(array[currentIndex], array[randomIndex]);
+          }
         }
       }
       $("#swap").click(() => {
