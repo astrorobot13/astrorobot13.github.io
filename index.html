@@ -258,7 +258,7 @@
           try {
             audio.src = $("#playing").parent().next()[0].getAttribute("url");
           } catch(e) {
-            if ($("#repeat")[0].innerHTML = "repeat_on") {
+            if ($("#repeat")[0].innerHTML == "repeat_on") {
               audio.src = $(".track")[1].getAttribute("url");
             }
           }
