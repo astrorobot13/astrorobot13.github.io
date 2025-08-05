@@ -258,7 +258,9 @@
           try {
             audio.src = $("#playing").parent().next()[0].getAttribute("url");
           } catch(e) {
-            audio.src = $(".track")[1].getAttribute("url");
+            if ($("#repeat")[0].innerHTML = "repeat_on") {
+              audio.src = $(".track")[1].getAttribute("url");
+            }
           }
         } else if (audio.src == "") {
           try {
@@ -283,7 +285,11 @@
       });
       $("#shuffle").click(shuffle);
       $("#repeat").click(() => {
-        
+        if (event.target.innerHTML == "repeat") {
+          event.target.innerHTML = "repeat_on";
+        } else {
+          event.target.innerHTML = "repeat";
+        }
       });
       $("#pf").click(() => {
         if (event.target.innerHTML == "pause_circle") {
