@@ -172,6 +172,7 @@
       <button class="material-symbols-rounded" id="uploadTrack">playlist_add</button>
       <button class="material-symbols-rounded" id="p">play_arrow</button>
       <button class="material-symbols-rounded" id="shuffle">shuffle</button>
+      <button class="material-symbols-rounded" id="repeat">repeat</button>
       <button class="material-symbols-rounded" id="timer">timer</button>
       <div id="options">
         <button>Button</button>
@@ -254,7 +255,11 @@
       function play() {
         audio = $("audio")[0];
         if (audio.ended) {
-          audio.src = $("#playing").parent().next()[0].getAttribute("url");
+          try {
+            audio.src = $("#playing").parent().next()[0].getAttribute("url");
+          } catch(e) {
+            audio.src = $(".track")[1].getAttribute("url");
+          }
         } else if (audio.src == "") {
           try {
             $(".track")[1].click();
@@ -277,6 +282,9 @@
         audio = $("audio")[0];
       });
       $("#shuffle").click(shuffle);
+      $("#repeat").click(() => {
+        
+      });
       $("#pf").click(() => {
         if (event.target.innerHTML == "pause_circle") {
           event.target.innerHTML = "play_circle";
@@ -430,6 +438,9 @@
         navigator.mediaSession.setActionHandler("shuffle", shuffle);
       }
       $("audio").on("play", addHandlers);
+      if (window.matchMedia('(display-mode: standalone)').matches) {
+        $("meta[name=viewport]")[0].setAttribute("content", "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0");
+      }
     </script>
   </body>
 </html>
