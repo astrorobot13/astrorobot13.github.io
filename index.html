@@ -328,6 +328,8 @@
           timer.set(parseInt(event.target.innerHTML));
         }
       });
+      const timer = new Timer();
+      timer.display = $("#display")[0];
       $("#uploadTrack").click(() => {
         xy = document.createElement("input");
         xy.type = "file";
