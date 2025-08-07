@@ -52,7 +52,7 @@ const timer = {
     this.interval = setInterval(this.updateDisplay, 75);
   },
   updateDisplay: function() {
-    const elapsedTime = Math.ceil((performance.now() - this.startTime) / 1000);
+    const elapsedTime = Math.ceil(performance.now() - this.startTime);
     
   },
   clear: function() {
