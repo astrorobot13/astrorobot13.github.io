@@ -1,9 +1,9 @@
-const timer = {
-  startTime: null,
-  length: null,
-  display: null,
-  interval: null,
-  updateDisplay: function() {
+class Timer {
+  startTime = null;
+  length = null;
+  display = null;
+  interval = null;
+  updateDisplay = () => {
     let seconds = this.length - Math.floor((performance.now() - this.startTime) / 1000);
     const minutes = Math.floor(seconds / 60);
     seconds = seconds % 60;
@@ -20,8 +20,8 @@ const timer = {
       }
       clearInterval(this.interval);
     }
-  },
-  set: function(length, units="min") {
+  };
+  set = (length, units="min") => {
     if (length == 0) {
       this.clear();
     }
@@ -35,9 +35,9 @@ const timer = {
     }
     this.interval = setInterval(this.updateDisplay, 75);
     this.updateDisplay();
-  },
-  clear: function() {
+  };
+  clear = () => {
     clearInterval(this.interval);
     this.display.innerHTML = "0:00";
-  }
+  };
 }
