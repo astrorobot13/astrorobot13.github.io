@@ -1,42 +1,26 @@
-let time, clock, start, total;
-function stop() {
-  for (i of document.getElementsByTagName("audio")) {
-    i.pause();
-  }
-  clearInterval(clock);
-  document.getElementById("minutes").innerHTML = "0";
-  document.getElementById("seconds").innerHTML = "00";
-}
-function setTimer() {
-  clearTimeout(time);
-  clearInterval(clock);
-  if (isNaN(parseInt(document.getElementsByTagName("option")[document.getElementById("timer").selectedIndex].innerHTML))) {
-    document.getElementById("minutes").innerHTML = "0";
-    document.getElementById("seconds").innerHTML = "00";
-  } else {
-    const minutes = parseInt(document.getElementsByTagName("option")[document.getElementById("timer").selectedIndex].innerHTML);
-    start = performance.now();
-    total = minutes * 60;
-    time = setTimeout(stop, minutes * 60000);
-    clock = setInterval(displayClock, 75);
-} }
-function displayClock() {
-  let seconds = total - Math.floor((performance.now() - start) / 1000);
-  const minutes = Math.floor(seconds / 60);
-  seconds = seconds % 60;
-  if (seconds < 10) {
-    seconds = "0".concat(seconds.toString());
-  } else {
-    seconds = seconds.toString();
-  }
-  document.getElementById("minutes").innerHTML = minutes.toString();
-  document.getElementById("seconds").innerHTML = seconds;
-}
 const timer = {
   startTime: null,
   length: null,
   display: null,
   interval: null,
+  updateDisplay: function() {
+    let seconds = this.length - Math.floor((performance.now() - this.startTime) / 1000);
+    const minutes = Math.floor(seconds / 60);
+    seconds = seconds % 60;
+    if (seconds < 10) {
+      seconds = `0${seconds}`;
+    }
+    this.display.innerHTML = `${minutes}:${seconds}`;
+    if (this.display.innerHTML == "0:00") {
+      for (let i of document.querySelector("audio")) {
+        i.pause();
+      }
+      for (let i of document.querySelector("video")) {
+        i.pause();
+      }
+      clearInterval(this.interval);
+    }
+  },
   set: function(length, units="min") {
     if (length == 0) {
       this.clear();
@@ -50,12 +34,10 @@ const timer = {
       this.length = length;
     }
     this.interval = setInterval(this.updateDisplay, 75);
-  },
-  updateDisplay: function() {
-    const elapsedTime = Math.ceil(performance.now() - this.startTime);
-    
+    this.updateDisplay();
   },
   clear: function() {
-
+    clearInterval(this.interval);
+    this.display.innerHTML = "0:00";
   }
 }
