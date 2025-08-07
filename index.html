@@ -173,11 +173,17 @@
       <button class="material-symbols-rounded" id="p">play_arrow</button>
       <button class="material-symbols-rounded" id="shuffle">shuffle</button>
       <button class="material-symbols-rounded" id="repeat">repeat</button>
+      <button class="material-symbols-rounded" id="mute">volume_up</button>
       <button class="material-symbols-rounded" id="timer">timer</button>
       <div id="options">
-        <button>Button</button>
+        <button>Off</button>
+        <button>5 Minutes</button>
+        <button>10 Minutes</button>
+        <button>15 Minutes</button>
+        <button>20 Minutes</button>
+        <button>30 Minutes</button>
       </div>
-      <button class="material-symbols-rounded" id="mute">volume_up</button>
+      <span id="display"></span>
       <p id="errors"></p>
     </div>
     <footer>
@@ -190,7 +196,7 @@
       </div>
       <div id="time">
         <span id="position">0:00</span>
-        <input type="range" disabled>
+        <input type="range">
         <span id="remaining">0:00</span>
       </div>
       <div>
@@ -200,6 +206,7 @@
     <audio autoplay></audio>
     <pre></pre>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
+    <script src="js/timer.js"></script>
     <script>
       function getMetadata(file) {
         return new Promise((resolve) => {
@@ -301,7 +308,11 @@
         }
       });
       $("#timer").click(() => {
-        $("#options").show();
+        if (getComputedStyle($("#options")[0]).display == "none") {
+          $("#options").show();
+        } else {
+          $("#options").hide();
+        }
       });
       $("#options > button").click(() => {
         $("#options").hide();
