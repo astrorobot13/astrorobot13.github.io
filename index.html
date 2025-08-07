@@ -158,6 +158,10 @@
         font-variation-settings: 'FILL' 1;
         font-size: 40px;
         padding: 4px;
+        padding-top: 0;
+      }
+      #options > button {
+        display: block;
       }
     </style>
   </head>
@@ -315,7 +319,11 @@
         }
       });
       $("#options > button").click(() => {
-        $("#options").hide();
+        if (isNaN(parseInt(event.target.innerHTML))) {
+          timer.set(0);
+        } else {
+          timer.set(parseInt(event.target.innerHTML));
+        }
       });
       $("#uploadTrack").click(() => {
         xy = document.createElement("input");
@@ -454,7 +462,7 @@
         });
         navigator.mediaSession.setActionHandler("shuffle", shuffle);
       }
-      $("audio").on("play", addHandlers);
+      $("audio")[0].addEventListener("play", addHandlers);
       if (window.matchMedia('(display-mode: standalone)').matches) {
         $("meta[name=viewport]")[0].setAttribute("content", "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0");
       }
