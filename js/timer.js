@@ -32,3 +32,30 @@ function displayClock() {
   document.getElementById("minutes").innerHTML = minutes.toString();
   document.getElementById("seconds").innerHTML = seconds;
 }
+const timer = {
+  startTime: null,
+  length: null,
+  display: null,
+  interval: null,
+  set: function(length, units="min") {
+    if (length == 0) {
+      this.clear();
+    }
+    this.startTime = performance.now();
+    if (units == "min") {
+      this.length = length * 60000;
+    } else if (units == "sec") {
+      this.length = length * 1000;
+    } else if (units == "msec") {
+      this.length = length;
+    }
+    this.interval = setInterval(this.updateDisplay, 75);
+  },
+  updateDisplay: function() {
+    const elapsedTime = Math.ceil((performance.now() - this.startTime) / 1000);
+    
+  },
+  clear: function() {
+
+  }
+}
