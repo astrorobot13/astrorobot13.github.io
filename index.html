@@ -191,13 +191,13 @@
         <button>20 Minutes</button>
         <button>30 Minutes</button>
       </div>
-      <p id="display"></p>
+      <p id="display"></p><!--
       <input type="radio" name="text-align" value="left">
       <label>L</label><br>
       <input type="radio" name="text-align" value="center">
       <label>C</label><br>
       <input type="radio" name="text-align" value="right">
-      <label>R</label><br>
+      <label>R</label><br>-->
       <p id="errors"></p>
     </div>
     <footer>
@@ -221,10 +221,10 @@
     <pre></pre>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
     <script src="js/timer.js"></script>
-    <script>
+    <script>/*
       $("input[type=radio").click(() => {
         $("#display")[0].style.textAlign = event.target.value;
-      });
+      });*/
       function getMetadata(file) {
         return new Promise((resolve) => {
           jsmediatags.read(file, {
