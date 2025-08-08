@@ -192,7 +192,7 @@
         <button>30 Minutes</button>
       </div>
       <p id="display"></p>
-      <input type="radio" name="text-align" value="right">
+      <input type="radio" name="text-align" value="right" selected>
       <label>R</label><br>
       <input type="radio" name="text-align" value="center">
       <label>C</label><br>
@@ -221,7 +221,7 @@
     <script src="js/timer.js"></script>
     <script>
       $("input[type=radio").click(() => {
-        $("#display").style(event.target.name, event.target.value);
+        $("#display")[0].style.textAlign = event.target.value;
       });
       function getMetadata(file) {
         return new Promise((resolve) => {
