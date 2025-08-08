@@ -323,13 +323,16 @@
       });
       $("#options > button").click(() => {
         if (isNaN(parseInt(event.target.innerHTML))) {
-          timer.set(0);
+          timer.clear();
         } else {
           timer.set(parseInt(event.target.innerHTML));
         }
       });
       const timer = new Timer();
       timer.display = $("#display")[0];
+      timer.onend = () => {
+        $("#pf")[0].click();
+      }
       $("#uploadTrack").click(() => {
         xy = document.createElement("input");
         xy.type = "file";
