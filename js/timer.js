@@ -39,7 +39,7 @@ class Timer {
     } else if (units == "msec") {
       this.length = length / 1000;
     }
-    this.interval = setInterval(this.updateDisplay, 75);
+    this.interval = setInterval(this.updateDisplay, 1000 / 13);
     this.updateDisplay();
   };
   clear = () => {
