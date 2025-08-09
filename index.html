@@ -168,6 +168,14 @@
         margin: 0;
         text-align: center;
       }
+      #zoom_lock {
+        display: none;
+      }
+      @media (display-mode: standalone) {
+        #zoom_lock {
+          display: block;
+        }
+      }
     </style>
   </head>
   <body>
@@ -199,6 +207,9 @@
       <label>C</label><br>
       <input type="radio" name="text-align" value="right">
       <label>R</label><br>-->
+      <div id="zoom_lock">
+        <input type="checkbox">
+      </div>
       <p id="errors"></p>
     </div>
     <footer>
@@ -485,6 +496,13 @@
       $("audio")[0].addEventListener("play", addHandlers);
       if (window.matchMedia('(display-mode: standalone)').matches) {
         $("meta[name=viewport]")[0].setAttribute("content", "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0");
+        $("#zoom_lock").on("input", () => {
+          if (event.target.checked) {
+            $("meta[name=viewport]")[0].setAttribute("content", "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0");
+          } else {
+            $("meta[name=viewport]")[0].setAttribute("content", "width=device-width, initial-scale=1.0");
+          }
+        });
       }
     </script>
   </body>
