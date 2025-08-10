@@ -12,7 +12,7 @@
       "type": "image/svg+xml"
     }
   ],
-  "start_url": "/",
+  "start_url": "/scorer.html",
   "display": "standalone",
   "theme_color": "#808080",
   "background_color": "#202022"
