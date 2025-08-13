@@ -5,17 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ace</title>
   <style>
-    p {
-      font-family: Menlo, Monaco, 'Courier New', monospace;
+    #editor {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
     }
   </style>
 </head>
 <body>
-  <p></p>
+  <div id="editor"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ace.min.js"></script>
   <script>
-    window.addEventListener("hashchange", () => {
-      document.querySelector("p").innerHTML = window.location.hash;
-    });
+    var editor = ace.edit("editor");
+    editor.renderer.setOption("theme", "ace/theme/tomorrow_night");
+    editor.session.setOption("mode", "ace/mode/html");
+    editor.session.setOption("tabSize", 2);
+    window.onhashchange = () => {
+      settings = JSON.parse(window.location.hash.replace(/^#\/?/, ""));
+      editor.editor.setOptions(settings.editor);
+      editor.renderer.setOptions(settings.renderer);
+      editor.mouseHandler.setOptions(settings.editor);
+      editor.session.setOptions(settings.editor);
+    }
   </script>
 </body>
 </html>
