@@ -20,10 +20,10 @@
   <script>
     var editor = ace.edit("editor");
     editor.renderer.setOption("theme", "ace/theme/tomorrow_night");
-    editor.session.setOption("mode", "ace/mode/html");
+    editor.session.setOption("mode", "ace/mode/json");
     editor.session.setOption("tabSize", 2);
     window.onhashchange = () => {
-      settings = JSON.parse(window.location.hash.replace(/^#\/?/, ""));
+      settings = JSON.parse(decodeURIComponent(window.location.hash.replace(/^#\/?/, "")));
       editor.editor.setOptions(settings.editor);
       editor.renderer.setOptions(settings.renderer);
       editor.mouseHandler.setOptions(settings.editor);
