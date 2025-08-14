@@ -19,9 +19,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ace.min.js"></script>
   <script>
     var editor = ace.edit("editor");
-    editor.renderer.setOption("theme", "ace/theme/tomorrow_night");
-    editor.session.setOption("mode", "ace/mode/json");
-    editor.session.setOption("tabSize", 2);
     window.onhashchange = () => {
       settings = JSON.parse(decodeURIComponent(window.location.hash.replace(/^#\/?/, "")));
       console.log(settings);
