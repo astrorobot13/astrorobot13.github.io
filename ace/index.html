@@ -22,12 +22,10 @@
     window.onhashchange = () => {
       settings = JSON.parse(decodeURIComponent(window.location.hash.replace(/^#\/?/, "")));
       console.log(settings);
-      try {
       editor.session.setOptions(settings.session);
       editor.setOptions(settings.editor);
       editor.renderer.setOptions(settings.renderer);
       editor.mouseHandler.setOptions(settings.mouseHandler);
-      } catch(e) {}
     }
     window.location.hash = "/" + JSON.stringify({
       session: editor.session.getOptions(),
