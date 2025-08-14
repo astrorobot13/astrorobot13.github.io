@@ -27,6 +27,9 @@
       editor.renderer.setOptions(settings.renderer);
       editor.mouseHandler.setOptions(settings.mouseHandler);
     }
+    window.addEventListener("message", () => {
+      editor.setValue(typeof event.data);
+    });
     window.location.hash = "/" + JSON.stringify({
       session: editor.session.getOptions(),
       editor: editor.getOptions(),
