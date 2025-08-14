@@ -6,30 +6,65 @@
   <title>Document</title>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <style>
+    body {
+      background-color: #202022;
+      color: white;
+    }
     #settings {
       position: absolute;
       top: 0;
       bottom: 0;
       left: 0;
       right: 75vw;
-      background-color: red;
+      background-color: #303032;
     }
     #editor {
+      position: absolute;
+      top: 26px;
+      bottom: 0;
+      left: 25vw;
+      right: 0;
+      border: 2px solid white;
+    }
+    #tabs {
       position: absolute;
       top: 0;
       bottom: 0;
       left: 25vw;
       right: 0;
     }
+    #tabs > button {
+      padding: 0.3125rem 0.625rem;
+      margin-top: 0.875rem;
+      cursor: pointer;
+      background-color: transparent;
+      border: none;
+      border-radius: 0.25rem;
+      border-bottom: 0.25rem solid var(--red);
+      /* #484db2 */
+      font-family: 'Roboto', serif;
+      font-size: 1em;
+      color: white;
+      margin: 0;
+    }
+    #tabs > button:hover, #selected{
+      background-color: rgba(248, 248, 255, 0.103);
+    }
+    #tabs > button:active {
+      background-color: rgba(248, 248, 255, 0.14865);
+    }
   </style>
 </head>
 <body>
   <div id="settings"></div>
+  <div id="tabs">
+    <button>Tab 1</button>
+  </div>
   <div id="editor"></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ace.min.js"></script>
   <script>
     var editor = ace.edit("editor");
-    
+    editor.setTheme("ace/theme/tomorrow_night");
   </script>
 </body>
 </html>
