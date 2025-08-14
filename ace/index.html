@@ -24,11 +24,19 @@
     editor.session.setOption("tabSize", 2);
     window.onhashchange = () => {
       settings = JSON.parse(decodeURIComponent(window.location.hash.replace(/^#\/?/, "")));
-      editor.editor.setOptions(settings.editor);
+      console.log(settings);
+      try {
+      editor.session.setOptions(settings.session);
+      editor.setOptions(settings.editor);
       editor.renderer.setOptions(settings.renderer);
-      editor.mouseHandler.setOptions(settings.editor);
-      editor.session.setOptions(settings.editor);
+      editor.mouseHandler.setOptions(settings.mouseHandler);
+      } catch(e) {}
     }
+    window.location.hash = "/" + JSON.stringify({
+      session: editor.session.getOptions(),
+      editor: editor.getOptions(),
+      renderer: editor.renderer.getOptions(),
+    });
   </script>
 </body>
 </html>
