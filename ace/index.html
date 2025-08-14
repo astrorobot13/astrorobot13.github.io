@@ -34,6 +34,11 @@
       editor: editor.getOptions(),
       renderer: editor.renderer.getOptions(),
     });
+    editor.setValue(JSON.stringify({
+      session: editor.session.getOptions(),
+      editor: editor.getOptions(),
+      renderer: editor.renderer.getOptions(),
+    }, null, 2));
   </script>
 </body>
 </html>
