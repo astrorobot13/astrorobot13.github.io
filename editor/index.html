@@ -113,7 +113,6 @@
   <div id="popup_container"></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ace.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ext-themelist.min.js"></script>
-  <script src="https://astrorobot13.github.io/editor/emmet.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ext-emmet.min.js"></script>
   <script>
     let el;
@@ -123,6 +122,7 @@
     editor.setOption("fontSize", 14);
     editor.setOption("scrollPastEnd", true);
     var themelist = ace.require("ace/ext/themelist");
+    editor.setValue(JSON.stringify(themelist, null, 2));
     // var themes = themelist.themesByName;
     for (i of themelist.themes) {
       el = document.createElement("option");
@@ -134,7 +134,7 @@
       $("#theme")[0].appendChild(el);
     }
     var emmet = ace.require("ace/ext/emmet");
-    editor.setValue(JSON.stringify(emmet, null, 2));
+    // editor.setValue(JSON.stringify(emmet, null, 2));
     editor.setOption("enableEmmet", true);
     $("form").on("input", () => {
       try {
