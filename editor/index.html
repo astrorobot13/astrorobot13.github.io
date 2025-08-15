@@ -122,7 +122,7 @@
     editor.setOption("fontSize", 14);
     editor.setOption("scrollPastEnd", true);
     var themelist = ace.require("ace/ext/themelist");
-    editor.setValue(JSON.stringify(themelist, null, 2));
+    editor.setValue(JSON.stringify(themelist.themes, null, 2));
     // var themes = themelist.themesByName;
     for (i of themelist.themes) {
       el = document.createElement("option");
