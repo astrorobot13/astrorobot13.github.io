@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Editor</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap">
@@ -104,7 +104,10 @@
     <input type="number" op="{'tabSize':$}">
     <div></div>
     <label>Theme</label>
-    <select id="theme" op="{'theme':'$'}"></select>
+    <select op="{'theme':'$'}">
+      <optgroup label="Light"></optgroup>
+      <optgroup label="Dark"></optgroup>
+    </select>
   </form>
   <div id="tabs">
     <button>Tab 1</button><button class="material-symbols-rounded">add</button>
@@ -123,7 +126,6 @@
     editor.setOption("scrollPastEnd", true);
     var themelist = ace.require("ace/ext/themelist");
     editor.setValue(JSON.stringify(themelist.themes, null, 2));
-    // var themes = themelist.themesByName;
     for (i of themelist.themes) {
       el = document.createElement("option");
       el.innerHTML = i.caption;
@@ -131,7 +133,11 @@
       if (editor.getOption("theme") === i.theme) {
         el.selected = true;
       }
-      $("#theme")[0].appendChild(el);
+      if (i.isDark) {
+        $("optgroup")[1].appendChild(el);
+      } else {
+        $("optgroup")[0].appendChild(el);
+      }
     }
     var emmet = ace.require("ace/ext/emmet");
     // editor.setValue(JSON.stringify(emmet, null, 2));
