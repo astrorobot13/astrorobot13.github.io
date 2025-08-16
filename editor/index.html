@@ -144,7 +144,7 @@
     editor.setOption("enableEmmet", true);
     var modelist = ace.require("ace/ext/modelist");
     //try {
-    for (i of modelist) {
+    for (i in modelist) {
       if (typeof modelist[i] == "function") {
         modelist[i] = "function()";
       }
