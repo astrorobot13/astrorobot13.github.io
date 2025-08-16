@@ -79,25 +79,8 @@
       <span>Settings</span>
       <button class="material-symbols-rounded">close</button>
     </div>
-    <fieldset>
-      <legend>Language</legend>
-      <div>
-        <input type="radio" name="language" op="{'mode':'ace/mode/text'}" checked>
-        <label>Text</label>
-      </div>
-      <div>
-        <input type="radio" name="language" op="{'mode':'ace/mode/html'}">
-        <label>HTML</label>
-      </div>
-      <div>
-        <input type="radio" name="language" op="{'mode':'ace/mode/javascript'}">
-        <label>Javascript</label>
-      </div>
-      <div>
-        <input type="radio" name="language" op="{'mode':'ace/mode/json'}">
-        <label>JSON</label>
-      </div>
-    </fieldset>
+    <label>Language</label>
+    <select id="language" op="{'mode':'$'}"></select>
     <label>Font size</label>
     <input type="number" op="{'fontSize':$}">
     <div></div>
@@ -105,7 +88,7 @@
     <input type="number" op="{'tabSize':$}">
     <div></div>
     <label>Theme</label>
-    <select op="{'theme':'$'}">
+    <select id="theme" op="{'theme':'$'}">
       <optgroup label="Light"></optgroup>
       <optgroup label="Dark"></optgroup>
     </select>
@@ -143,16 +126,12 @@
     var emmet = ace.require("ace/ext/emmet");
     editor.setOption("enableEmmet", true);
     var modelist = ace.require("ace/ext/modelist");
-    //try {
-    for (i in modelist) {
-      if (typeof modelist[i] == "function") {
-        modelist[i] = "function()";
-      }
+    for (i of modelist.modes) {
+      el = document.createElement("option");
+      el.innerHTML = i.caption;
+      el.setAttribute("value", i.mode);
+      $("#language")[0].appendChild(el);
     }
-    editor.setValue(JSON.stringify(modelist, null, 2));/*
-    } catch(e) {
-      editor.setValue(e.message);
-    }*/
     $("form").on("input", () => {
       try {
         editor.setOptions(JSON.parse(event.target.getAttribute("op").replaceAll("'", '"').replaceAll("\$", event.target.value)));
