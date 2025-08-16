@@ -118,6 +118,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ace.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ext-themelist.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ext-emmet.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ext-modelist.min.js"></script>
   <script>
     let el;
     var editor = ace.edit("editor");
@@ -141,13 +142,17 @@
     }
     var emmet = ace.require("ace/ext/emmet");
     editor.setOption("enableEmmet", true);
-    var modelist = require("ace/ext/modelist")
+    var modelist = ace.require("ace/ext/modelist");
+    try {
     for (i of modelist) {
       if (typeof modelist[i] == "function") {
         modelist[i] = "function()";
       }
     }
     editor.setValue(JSON.stringify(modelist, null, 2));
+    } catch(e) {
+      editor.setValue(e.message);
+    }
     $("form").on("input", () => {
       try {
         editor.setOptions(JSON.parse(event.target.getAttribute("op").replaceAll("'", '"').replaceAll("\$", event.target.value)));
