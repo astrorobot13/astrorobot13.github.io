@@ -126,7 +126,6 @@
     editor.setOption("fontSize", 14);
     editor.setOption("scrollPastEnd", true);
     var themelist = ace.require("ace/ext/themelist");
-    editor.setValue(JSON.stringify(themelist.themes, null, 2));
     for (i of themelist.themes) {
       el = document.createElement("option");
       el.innerHTML = i.caption;
@@ -141,8 +140,14 @@
       }
     }
     var emmet = ace.require("ace/ext/emmet");
-    // editor.setValue(JSON.stringify(emmet, null, 2));
     editor.setOption("enableEmmet", true);
+    var modelist = require("ace/ext/modelist")
+    for (i of modelist) {
+      if (typeof modelist[i] == "function") {
+        modelist[i] = "function()";
+      }
+    }
+    editor.setValue(JSON.stringify(modelist, null, 2));
     $("form").on("input", () => {
       try {
         editor.setOptions(JSON.parse(event.target.getAttribute("op").replaceAll("'", '"').replaceAll("\$", event.target.value)));
