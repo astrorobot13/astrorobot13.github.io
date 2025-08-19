@@ -29,9 +29,11 @@
 <body>
   <div>
     <input type="file">
+    <pre></pre>
     <script>
       $("input").on("input", () => {
         event.target.files[0].text().then((d) => {
+          try {
           xy = new DOMParser().parseFromString(d, "image/svg+xml");
           xy = document.getElementsByTagName("image")[0];
           xy = xy.getAttribute("xlink:href");
@@ -39,6 +41,9 @@
           link.href = xy;
           link.download = "logo.png";
           document.body.appendChild(xy);
+          } catch(e) {
+            $("pre").text(e.message);
+          }
         });
       });
     </script>
