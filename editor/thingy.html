@@ -35,9 +35,9 @@
       $("input").on("input", () => {
         event.target.files[0].text().then((d) => {
           try {
-          xy = new DOMParser().parseFromString(d, "image/svg+xml");
+          xy = new DOMParser().parseFromString(d, "text/html");
           xy = document.childNodes[0];
-          $("pre").text(typeof xy.getAttribute);
+          $("pre").text(typeof xy.outerHTML);
           xy = xy.getAttribute("xlink:href");
           link = document.createElement("a");
           link.href = xy;
