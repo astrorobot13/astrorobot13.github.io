@@ -36,6 +36,7 @@
           try {
           xy = new DOMParser().parseFromString(d, "image/svg+xml");
           xy = document.childNodes[0];
+          $("pre").text(xy.getAttributeNames());
           xy = xy.getAttribute("xlink:href");
           link = document.createElement("a");
           link.href = xy;
