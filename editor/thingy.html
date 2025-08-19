@@ -42,9 +42,9 @@
           link = document.createElement("a");
           link.href = xy;
           link.download = "logo.png";
-          document.querySelector("body > div").appendChild(xy);
+          $("pre")[0].appendChild(xy);
           } catch(e) {
-            //$("pre").text(e.message);
+            $("pre").text(e.message);
           }
         });
       });
