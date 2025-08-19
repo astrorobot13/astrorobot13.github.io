@@ -18,6 +18,7 @@
       left: 0;
       right: 0;
       overflow: scroll;
+      padding: 8px;
     }
     /*
       WZLX: #d2232a
@@ -36,7 +37,7 @@
           try {
           xy = new DOMParser().parseFromString(d, "image/svg+xml");
           xy = document.childNodes[0];
-          $("pre").text(typeof xy.attributes);
+          $("pre").text(typeof xy.getAttribute);
           xy = xy.getAttribute("xlink:href");
           link = document.createElement("a");
           link.href = xy;
