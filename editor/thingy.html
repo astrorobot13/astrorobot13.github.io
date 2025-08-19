@@ -4,22 +4,44 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <meta http-equiv="cache-control" content="no-cache">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <style>
-    body > div {
+    body {
       background-color: #202022;
       color: white;
+    }
+    body > div {
       position: absolute;
       top: 0;
       bottom: 0;
       left: 0;
       right: 0;
       overflow: scroll;
-      border: 2px solid white;
     }
+    /*
+      WZLX: #d2232a
+      KTBZ: #f20022
+      WMRQ: #51b948
+    */
   </style>
 </head>
 <body>
-  <div></div>
+  <div>
+    <input type="file">
+    <script>
+      $("input").on("input", () => {
+        event.target.files[0].text().then((d) => {
+          xy = new DOMParser().parseFromString(d, "image/svg+xml");
+          xy = document.getElementsByTagName("image")[0];
+          xy = xy.getAttribute("xlink:href");
+          link = document.createElement("a");
+          link.href = xy;
+          link.download = "logo.png";
+          document.body.appendChild(xy);
+        });
+      });
+    </script>
+  </div>
 </body>
 </html>
