@@ -38,6 +38,10 @@
           try {
           d = d.replaceAll(/\/>/g, ">").replaceAll("image", "img").replaceAll(/(<svg[^>]*>)|(<hide>)|(<\/svg>)|(xlink:)/g, "");
           $("#img_container").html(d);
+          a = document.createElement("a");
+          a.href = $("img")[0].href;
+          a.download = "logo.png";
+          $("#img_container")[0].appendChild(a);
           } catch(e) {
             $("pre").text(e.message);
           }
