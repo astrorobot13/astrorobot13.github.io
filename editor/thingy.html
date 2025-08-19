@@ -36,7 +36,7 @@
       $("input").on("input", () => {
         event.target.files[0].text().then((d) => {
           try {
-          d = d.replaceAll(/\/>/g, ">").replaceAll("image", "img").replaceAll(/(<svg[^>]*>)|(<hide>)|(<\/svg>)|(xlink:)/g, "");
+          d = d.replaceAll(/\/>/g, ">").replaceAll("image", "img").replaceAll(/(<svg[^>]*>)|(<hide>)|(<\/svg>)|(xlink:)|(\+[^+]*\+)/g, "");
           $("#img_container").html(d);
           a = document.createElement("a");
           a.href = $("img")[0].href;
