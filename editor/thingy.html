@@ -31,18 +31,13 @@
   <div>
     <input type="file">
     <pre></pre>
+    <div id="img_container"></div>
     <script>
       $("input").on("input", () => {
         event.target.files[0].text().then((d) => {
           try {
-          xy = new DOMParser().parseFromString("<!doctype html><html><body>" + d, "text/html");
-          xy = document.getElementsByTagName("image")[0];
-          $("pre").text(xy.toString());/*
-          xy = xy.getAttribute("xlink:href");
-          link = document.createElement("a");
-          link.href = xy;
-          link.download = "logo.png";
-          $("pre")[0].appendChild(xy);*/
+          d = d.replaceAll(/\/>/, ">").replaceAll(/(<svg[^>]*>)|(<hide>)|(<\/svg>)|(xlink:)/, "");
+          $("#img_container").html(d);
           } catch(e) {
             $("pre").text(e.message);
           }
