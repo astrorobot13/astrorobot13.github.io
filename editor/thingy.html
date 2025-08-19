@@ -37,7 +37,7 @@
           try {
           xy = new DOMParser().parseFromString(d, "text/html");
           xy = document.getElementsByTagName("image")[0];
-          $("pre").text(typeof xy.outerHTML);
+          $("pre").text(typeof xy.getAttribute);
           xy = xy.getAttribute("xlink:href");
           link = document.createElement("a");
           link.href = xy;
