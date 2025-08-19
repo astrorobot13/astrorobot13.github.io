@@ -37,12 +37,12 @@
           try {
           xy = new DOMParser().parseFromString(d, "text/html");
           xy = document.getElementsByTagName("image")[0];
-          $("pre").text(xy);
+          $("pre").text(xy);/*
           xy = xy.getAttribute("xlink:href");
           link = document.createElement("a");
           link.href = xy;
           link.download = "logo.png";
-          $("pre")[0].appendChild(xy);
+          $("pre")[0].appendChild(xy);*/
           } catch(e) {
             $("pre").text(e.message);
           }
