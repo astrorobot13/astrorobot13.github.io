@@ -31,15 +31,17 @@
   <div>
     <input type="file">
     <pre></pre>
+    <p></p>
     <div id="img_container"></div>
     <script>
       $("input").on("input", () => {
         event.target.files[0].text().then((d) => {
           try {
-            d = d.replaceAll(/\/>/g, ">")
+            c = d.replaceAll(/\/>/g, ">")
                  .replaceAll("<image", "<img")
                  .replaceAll(/(<svg[^>]*>)|(<hide>)|(<\/svg>)|(xlink:)/g, "");
-            $("#img_container").html(d);
+            $("#img_container").html(c);
+            $("p").text(c);
             setTimeout(() => {
               a = document.createElement("a");
               a.href = $("img")[0].href;
