@@ -43,6 +43,12 @@
       height: 30px;
       background-color: #303032;
     }
+    .info > button {
+      padding: 0;
+      margin: 0;
+      border: none;
+      background-color: transparent;
+    }
   </style>
 </head>
 <body>
@@ -50,10 +56,14 @@
     <div style="background-color: #d2232a";>
       <p>This text is white.</p>
       <p style="color: black;">This text is black.</p>
-      <div class="info" style="bottom: 0;"></div>
+      <div class="info" style="bottom: 0;">
+        <button class="material-symbols-rounded">keyboard_arrow_down</button>
+      </div>
     </div>
     <div id="first" style="background-color: #51b948";>
-      <div class="info" style="bottom: 0;"></div>
+      <div class="info" style="top: 0;">
+        <button class="material-symbols-rounded">keyboard_arrow_up</button>
+      </div>
       <p>This text is white.</p>
       <p style="color: black;">This text is black.</p>
     </div>
@@ -75,20 +85,20 @@
       $("audio")[0].src = "https://crystalout.surfernetwork.com:8001/WMRQ_MP3";
       $("audio")[0].addEventListener("play", wdrcMeta);*/
     });
-    $("body > div > div").click(function() {
-      other = this.previousElementSibling || this.nextElementSibling;
+    $(".info > .material-symbols-rounded").click(function() {
+      clicked = this.parentElement.parentElement;
+      other = clicked.previousElementSibling || clicked.nextElementSibling;
       if (parseInt(getComputedStyle(other).height) == 0) {
-        $(this).css("height", "calc(50% - 16px)");
+        $(clicked).css("height", "calc(50% - 16px)");
         $(other).css("height", "calc(50% - 16px)");
         $(other).css("padding", "8px");
       } else {
-        $(this).css("height", "calc(100% - 16px)");
+        $(clicked).css("height", "calc(100% - 16px)");
         $(other).css("height", "0");
         $(other).css("padding", "0 8px");
       }
     });
     $("#first").click();
-    // g g v as 
   </script>
 </body>
 </html>
