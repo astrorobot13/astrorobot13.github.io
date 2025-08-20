@@ -115,12 +115,6 @@
     const m3u8 = {
       url: "",
       interval: NaN,
-      show: function() {
-        $.get(m3u8.url, (data, textStatus, xhr) => {
-          $("pre").text(data);
-          m3u8.url = xhr.responseURL || m3u8.url;
-        });
-      }
       setStation: function(num) {
         $.get(`https://stream.revma.ihrhls.com/zc${num}/hls.m3u8`, (data) => {
           m3u8.url = data.replaceAll(/#.*|\n/g, "");
@@ -128,6 +122,15 @@
           m3u8.interval = setInterval(m3u8.show, 10000);
           m3u8.show();
         });
+      },
+      show: function() {
+        $.get(m3u8.url, (data, textStatus, xhr) => {
+          $("pre").text(data);
+          m3u8.url = xhr.responseURL || m3u8.url;
+        });
+      },
+      getTracks: function() {
+        
       }
     }
     m3u8.setStation(2281);
