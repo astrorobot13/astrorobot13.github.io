@@ -37,11 +37,13 @@
       position: relative;
     }
     .info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       position: absolute;
       left: 0;
       right: 0;
-      /* height: 30px; */
-      background-color: #303032;
+      height: 30px;
     }
     .info > button {
       padding: 0;
@@ -49,24 +51,23 @@
       border: none;
       background-color: transparent;
       color: inherit;
+      font-size: 30px;
     }
   </style>
 </head>
 <body>
   <div>
     <div style="background-color: #d2232a";>
-      <p>This text is white.</p>
-      <p style="color: black;">This text is black.</p>
       <div class="info" style="bottom: 0;">
         <button class="material-symbols-rounded">keyboard_arrow_down</button>
+        <span>WZLX</span>
       </div>
     </div>
     <div id="first" style="background-color: #51b948";>
       <div class="info" style="top: 0;">
         <button class="material-symbols-rounded">keyboard_arrow_up</button>
+        <span>WDRC</span>
       </div>
-      <p>This text is white.</p>
-      <p style="color: black;">This text is black.</p>
     </div>
   </div>
   <div id="white" style="background-color: black;"></div>
