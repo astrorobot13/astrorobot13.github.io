@@ -13,6 +13,7 @@
     body {
       background-color: #202022;
       color: white;
+      font-family: "Roboto";
     }
     body > div {
       position: absolute;
@@ -33,15 +34,31 @@
       transition: 0.75s;
       padding: 8px;
       overflow: hidden;
+      position: relative;
+    }
+    .info {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 30px;
+      background-color: #303032;
     }
   </style>
 </head>
 <body>
   <div>
-    <div style="background-color: #d2232a";></div>
-    <div style="background-color: #51b948";></div>
+    <div style="background-color: #d2232a";>
+      <p>This text is white.</p>
+      <p style="color: black;">This text is black.</p>
+      <div class="info" style="bottom: 0;"></div>
+    </div>
+    <div id="first" style="background-color: #51b948";>
+      <div class="info" style="bottom: 0;"></div>
+      <p>This text is white.</p>
+      <p style="color: black;">This text is black.</p>
+    </div>
   </div>
-  <div id="white" style="background-color: white;"></div>
+  <div id="white" style="background-color: black;"></div>
   <audio autoplay></audio>
   <script>
     function wdrcMeta() {
@@ -58,18 +75,19 @@
       $("audio")[0].src = "https://crystalout.surfernetwork.com:8001/WMRQ_MP3";
       $("audio")[0].addEventListener("play", wdrcMeta);*/
     });
-    $("body > div > div").click(() => {
-      other = event.target.previousElementSibling || event.target.nextElementSibling;
+    $("body > div > div").click(function() {
+      other = this.previousElementSibling || this.nextElementSibling;
       if (parseInt(getComputedStyle(other).height) == 0) {
-        $(event.target).css("height", "calc(50% - 16px)");
+        $(this).css("height", "calc(50% - 16px)");
         $(other).css("height", "calc(50% - 16px)");
         $(other).css("padding", "8px");
       } else {
-        $(event.target).css("height", "calc(100% - 16px)");
+        $(this).css("height", "calc(100% - 16px)");
         $(other).css("height", "0");
-        $(other).css("padding", "0");
+        $(other).css("padding", "0 8px");
       }
     });
+    $("#first").click();
   </script>
 </body>
 </html>
