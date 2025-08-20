@@ -33,7 +33,7 @@
       height: calc(50% - 16px);
       transition: 0.75s;
       padding: 8px;
-      overflow: hidden;
+      overflow: scroll;
       position: relative;
     }
     .info {
@@ -58,6 +58,7 @@
 <body>
   <div>
     <div style="background-color: #d2232a";>
+      <pre></pre>
       <div class="info" style="bottom: 0;">
         <button class="material-symbols-rounded">keyboard_arrow_down</button>
         <span>WZLX</span>
@@ -102,7 +103,26 @@
         $(other).css("padding", "0 8px");
       }
     });
-    $("#first").click();
+    let m3u8_url;
+    function show_m3u8() {
+      $.get(m3u8_url, (data, textStatus, xhr) => {
+        try {
+        $("pre").text(data);
+        m3u8_url = xhr.responseURL || m3u8_url;
+        } catch (e) {
+          $("pre").text(e.message);
+        }
+      });
+    }
+    $.get("https://stream.revma.ihrhls.com/zc2281/hls.m3u8", (data) => {
+      try {
+      m3u8_url = data.replaceAll(/#.*|\n/g, "");
+      setTimeout(show_m3u8, 10000);
+      show_m3u8();
+      } catch (e) {
+        $("pre").text(e.message);
+      }
+    });
   </script>
 </body>
 </html>
