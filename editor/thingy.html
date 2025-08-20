@@ -62,7 +62,7 @@
 <body>
   <div>
     <div style="background-color: #d2232a">
-      <pre></pre>
+      <pre style="margin-top: 0;"></pre>
       <div class="info" style="bottom: 0;">
         <button class="material-symbols-rounded">keyboard_arrow_down</button>
         <span>WZLX</span>
@@ -112,18 +112,25 @@
         this.innerHTML = "keyboard_arrow_down";
       }
     });
-    let m3u8_url;
-    function show_m3u8() {
-      $.get(m3u8_url, (data, textStatus, xhr) => {
-        $("pre").text(data);
-        m3u8_url = xhr.responseURL || m3u8_url;
-      });
+    const m3u8 = {
+      url: "",
+      interval: NaN,
+      show: function() {
+        $.get(m3u8.url, (data, textStatus, xhr) => {
+          $("pre").text(data);
+          m3u8.url = xhr.responseURL || m3u8.url;
+        });
+      }
+      setStation: function(num) {
+        $.get(`https://stream.revma.ihrhls.com/zc${num}/hls.m3u8`, (data) => {
+          m3u8.url = data.replaceAll(/#.*|\n/g, "");
+          clearInterval(m3u8.interval);
+          m3u8.interval = setInterval(m3u8.show, 10000);
+          m3u8.show();
+        });
+      }
     }
-    $.get("https://stream.revma.ihrhls.com/zc2281/hls.m3u8", (data) => {
-      m3u8_url = data.replaceAll(/#.*|\n/g, "");
-      setInterval(show_m3u8, 10000);
-      show_m3u8();
-    });
+    m3u8.setStation(2281);
   </script>
 </body>
 </html>
