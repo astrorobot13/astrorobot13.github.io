@@ -29,6 +29,9 @@
     p {
       overflow-wrap: break-word;
     }
+    a {
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -41,19 +44,16 @@
       $("input").on("input", () => {
         event.target.files[0].text().then((d) => {
           try {
-            c = d.replaceAll(/\/>/g, ">")
+            d = d.replaceAll(/\/>/g, ">")
                  .replaceAll("<image", "<img")
-                 .replaceAll("href=\"", "src=\"")
-                 .replaceAll(/(<svg[^>]*>)|(<hide>)|(<\/svg>)|(xlink:)/g, "");
-            $("#img_container").html(c);
-            $("p").text(c);
-            setTimeout(() => {
-              a = document.createElement("a");
-              a.href = $("img")[0].href;
-              a.download = "logo.png";
-              a.innerHTML = "abc";
-              $("#img_container")[0].appendChild(a);
-            }, 1);
+                 .replaceAll("xlink:href=\"", "src=\"")
+                 .replaceAll(/(<svg[^>]*>)|(<hide>)|(<\/svg>)/g, "");
+            $("#img_container").html(d);
+            a = document.createElement("a");
+            a.href = $("img")[0].href;
+            a.download = "logo.png";
+            a.innerHTML = "abc";
+            $("#img_container")[0].appendChild(a)
           } catch(e) {
             $("pre").text(e.message);
           }
