@@ -50,7 +50,7 @@
                  .replaceAll(/(<svg[^>]*>)|(<hide>)|(<\/svg>)/g, "");
             $("#img_container").html(d);
             a = document.createElement("a");
-            a.href = $("img")[0].href;
+            a.href = $("img")[0].src;
             a.download = "logo.png";
             a.innerHTML = "abc";
             $("#img_container")[0].appendChild(a)
