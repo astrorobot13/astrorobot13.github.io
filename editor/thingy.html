@@ -26,40 +26,11 @@
       WMRQ: #51b948
       WDRC: #8dc63f
     */
-    p {
-      overflow-wrap: break-word;
-    }
-    a {
-      color: white;
-    }
   </style>
 </head>
 <body>
   <div>
-    <input type="file">
-    <pre></pre>
-    <p></p>
-    <div id="img_container"></div>
-    <script>
-      $("input").on("input", () => {
-        event.target.files[0].text().then((d) => {
-          try {
-            d = d.replaceAll(/\/>/g, ">")
-                 .replaceAll("<image", "<img")
-                 .replaceAll("xlink:href=\"", "src=\"")
-                 .replaceAll(/(<svg[^>]*>)|(<hide>)|(<\/svg>)/g, "");
-            $("#img_container").html(d);
-            a = document.createElement("a");
-            a.href = $("img")[0].src;
-            a.download = "logo.png";
-            a.innerHTML = "abc";
-            $("#img_container")[0].appendChild(a)
-          } catch(e) {
-            $("pre").text(e.message);
-          }
-        });
-      });
-    </script>
+    
   </div>
 </body>
 </html>
