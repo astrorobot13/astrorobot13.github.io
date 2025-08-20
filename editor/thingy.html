@@ -27,10 +27,16 @@
       WMRQ: #51b948
       WDRC: #8dc63f
     */
+    body > div > div {
+      height: 50%;
+    }
   </style>
 </head>
 <body>
-  <div></div>
+  <div>
+    <div style="background-color: #d2232a";></div>
+    <div style="background-color: #51b948";></div>
+  </div>
   <div id="white" style="background-color: white;"></div>
   <audio autoplay></audio>
   <script>
@@ -48,6 +54,16 @@
       event.target.remove();
       $("audio")[0].src = "https://crystalout.surfernetwork.com:8001/WDRC-FM_MP3";
       $("audio")[0].addEventListener("play", wdrcMeta);
+    });
+    $("body > div > div").click(() => {
+      other = event.target.previousElementSibling || event.target.nextElementSibling;
+      if (parseInt(getComputedStyle(other).height) == 0) {
+        $(event.target).css("height", "50%");
+        $(other).css("height", "50%");
+      } else {
+        $(event.target).css("height", "100%");
+        $(other).css("height", "0%");
+      }
     });
   </script>
 </body>
