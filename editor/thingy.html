@@ -18,8 +18,6 @@
       left: 0;
       right: 0;
       overflow: scroll;
-      padding: 8px;
-      transition: 0.75s;
     }
     /*
       WZLX: #d2232a
@@ -29,6 +27,8 @@
     */
     body > div > div {
       height: 50%;
+      transition: 0.75s;
+      padding: 8px;
     }
   </style>
 </head>
@@ -43,16 +43,15 @@
     function wdrcMeta() {
       event.target.removeEventListener("play", wdrcMeta);
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: "102.9 The Whale",
-        artist: "Connecticut's Classic Rock",
+        title: "Radio 104.1",
         artwork: [{
-          src: "https://cdn-profiles.tunein.com/s28332/images/logod.png"
+          src: "https://cdn-radiotime-logos.tunein.com/s21226q.png"
         }]
       });
     }
     $("#white").click(() => {
       event.target.remove();
-      $("audio")[0].src = "https://crystalout.surfernetwork.com:8001/WDRC-FM_MP3";
+      $("audio")[0].src = "https://crystalout.surfernetwork.com:8001/WMRQ_MP3";
       $("audio")[0].addEventListener("play", wdrcMeta);
     });
     $("body > div > div").click(() => {
