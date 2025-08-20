@@ -59,11 +59,11 @@
       if (parseInt(getComputedStyle(other).height) == 0) {
         $(event.target).css("height", "50%");
         $(other).css("height", "50%");
-        $(other).css("padding", "0");
+        $(other).css("padding", "8px");
       } else {
         $(event.target).css("height", "100%");
         $(other).css("height", "0%");
-        $(other).css("padding", "8px");
+        $(other).css("padding", "0");
       }
     });
   </script>
