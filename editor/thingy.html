@@ -26,7 +26,7 @@
       WDRC: #8dc63f
     */
     body > div > div {
-      height: 50%;
+      height: calc(50% - 16px)%;
       transition: 0.75s;
       padding: 8px;
     }
@@ -57,12 +57,12 @@
     $("body > div > div").click(() => {
       other = event.target.previousElementSibling || event.target.nextElementSibling;
       if (parseInt(getComputedStyle(other).height) == 0) {
-        $(event.target).css("height", "50%");
-        $(other).css("height", "50%");
+        $(event.target).css("height", "calc(50% - 16px)");
+        $(other).css("height", "calc(50% - 16px)");
         $(other).css("padding", "8px");
       } else {
-        $(event.target).css("height", "100%");
-        $(other).css("height", "0%");
+        $(event.target).css("height", "calc(100% - 16px)");
+        $(other).css("height", "0");
         $(other).css("padding", "0");
       }
     });
