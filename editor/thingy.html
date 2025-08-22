@@ -112,6 +112,19 @@
         this.innerHTML = "keyboard_arrow_down";
       }
     });
+    function xhrPromise(url, options={method:"GET",headers={}}) {
+      return new Promise((resolve) => {
+        xhr = new XMLHttpRequest();
+        xhr.open(options.method, url);
+        for (i in options.headers) {
+          xhr.setRequestHeader(i, options.headers[i]);
+        }
+        xhr.onload = () => {
+          resolve(xhr);
+        }
+        xhr.send();
+      });
+    }
     const m3u8 = {
       url: "",
       interval: NaN,
@@ -130,12 +143,41 @@
         });
       },
       stream: {
-        mediaSequence: 0,
+        num: 0,
         beforeNumber: "",
-        afterNumber: ".aac"
+        afterNumber: ".aac",
+        parts: [
+          {
+            num: 0,
+            meta: {}
+          }
+        ]
       },
-      play: function() {
-        
+      play: async function(num) {
+        m3u8.url = await xhrPromise(`https://stream.revma.ihrhls.com/zc${num}/hls.m3u8`).responseText.replaceAll(/#.*|\n/g, "");
+        data = await xhrPromise(m3u8.url).responseText.split("\n");
+        pre = $("pre");
+        pre.html("");
+        pre = pre[0];
+        for (i = 0; i < data.length; i++) {
+          if (data[i].match(/^https:\/\//)) {
+            track = {
+              src: data[i]
+              meta: m3u8.parse(data[i - 1])
+            };
+            track.meta = {
+              title: track.meta.get("title"),
+              artist: track.meta.get("artist"),
+              artwork: [{
+                src: track.meta.get("amgArtworkURL") || "https://iheart.com/static/assets/placeholder.png"
+              }],
+              id: track.meta.get("TPID")
+            };
+            
+          } else {
+            pre.innerHTML += data[i] + "\n";
+          }
+        }
       }
     }
     m3u8.setStation(2281);
