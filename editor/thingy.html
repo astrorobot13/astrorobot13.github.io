@@ -77,7 +77,7 @@
       <p>This is a paragraph.</p>
     </div>
   </div>
-  <div id="white" style="background-color: white;"></div>
+  <div id="white" style="background-color: black;"></div>
   <audio autoplay></audio>
   <script>
     function wdrcMeta() {
@@ -112,7 +112,7 @@
         this.innerHTML = "keyboard_arrow_down";
       }
     });
-    function xhrPromise(url, options={method:"GET",headers={}}) {
+    function xhrPromise(url, options={method:"GET",headers:{}}) {
       return new Promise((resolve) => {
         xhr = new XMLHttpRequest();
         xhr.open(options.method, url);
@@ -162,7 +162,7 @@
         for (i = 0; i < data.length; i++) {
           if (data[i].match(/^https:\/\//)) {
             track = {
-              src: data[i]
+              src: data[i],
               meta: m3u8.parse(data[i - 1])
             };
             track.meta = {
