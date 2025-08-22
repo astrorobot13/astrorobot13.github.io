@@ -106,7 +106,7 @@
     let el;
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/tomorrow_night");
-    editor.session.setOption("printMargin", false);
+    editor.setOption("printMargin", false);
     editor.setOption("fontSize", 14);
     editor.setOption("scrollPastEnd", true);
     var themelist = ace.require("ace/ext/themelist");
@@ -130,6 +130,9 @@
       el = document.createElement("option");
       el.innerHTML = i.caption;
       el.setAttribute("value", i.mode);
+      if (editor.getOption("mode") === i.mode) {
+        el.selected = true;
+      }
       $("#language")[0].appendChild(el);
     }
     $("form").on("input", () => {
@@ -149,4 +152,3 @@
   </script>
 </body>
 </html>
-<!-- This is a comment. -->
