@@ -156,6 +156,7 @@
           }
         ]
       },
+      metaCache: {},
       parse: function(m) {},
       play: async function(num) {
         m3u8.url = await xhrPromise(`https://stream.revma.ihrhls.com/zc${num}/hls.m3u8`).responseText.replaceAll(/#.*|\n/g, "");
@@ -174,7 +175,7 @@
               artwork: [{
                 src: track.meta.get("amgArtworkURL") || "https://iheart.com/static/assets/placeholder.png"
               }],
-              id: Math.randrange(1000000, 99999999)
+              id: track.meta.get("TPID")
             };
             if (m3u8.stream.parts.length == 0) {
               track.el.autoplay = true;
@@ -182,7 +183,17 @@
                 m3u8.stream.parts.splice(0, 1);
               }
             }
-            
+            cacheFound = false;
+            for (i in m3u8.metaCache) {
+              if (i === track.meta.id) {
+                track.meta = m3u8.metaCache[i];
+                cacheFound = true;
+                break;
+              }
+            }
+            if (!cacheFound) {
+              m3u8.metaCache[track.meta.id] = 
+            }
           } else {
             pre.innerHTML += data[i] + "\n";
           }
