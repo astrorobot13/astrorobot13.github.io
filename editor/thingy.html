@@ -153,16 +153,16 @@
           }
         ]
       },
+      parse: function(m) {}
       play: async function(num) {
         m3u8.url = await xhrPromise(`https://stream.revma.ihrhls.com/zc${num}/hls.m3u8`).responseText.replaceAll(/#.*|\n/g, "");
         data = await xhrPromise(m3u8.url).responseText.split("\n");
-        pre = $("pre");
-        pre.html("");
-        pre = pre[0];
+        pre = $("pre")[0];
+        pre.innerHTML = "";
         for (i = 0; i < data.length; i++) {
           if (data[i].match(/^https:\/\//)) {
             track = {
-              src: data[i],
+              el: new Audio(url),
               meta: m3u8.parse(data[i - 1])
             };
             track.meta = {
@@ -173,6 +173,9 @@
               }],
               id: track.meta.get("TPID")
             };
+            if (m3u8.stream.parts.length == 0) {
+              track.el.autoplay = true;
+            }
             
           } else {
             pre.innerHTML += data[i] + "\n";
