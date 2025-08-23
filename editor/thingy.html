@@ -125,6 +125,9 @@
         xhr.send();
       });
     }
+    Math.randrange = (min, max) => {
+      return Math.floor(Math.random() * ((max-min) + 1)) + min;
+    };
     const m3u8 = {
       url: "",
       interval: NaN,
@@ -171,10 +174,13 @@
               artwork: [{
                 src: track.meta.get("amgArtworkURL") || "https://iheart.com/static/assets/placeholder.png"
               }],
-              id: track.meta.get("TPID")
+              id: Math.randrange(1000000, 99999999);
             };
             if (m3u8.stream.parts.length == 0) {
               track.el.autoplay = true;
+              track.el.onplay = () => {
+                m3u8.stream.parts.splice(0, 1);
+              }
             }
             
           } else {
