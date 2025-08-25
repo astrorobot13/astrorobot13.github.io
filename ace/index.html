@@ -6,6 +6,12 @@
   <title>Ace</title>
   <meta http-equiv="cache-control" content="no-cache">
   <style>
+    body > div {
+      transition: 0.75s;
+    }
+    #top {
+      overflow: hidden;
+    }
     #editor {
       position: absolute;
       top: 0;
@@ -16,6 +22,10 @@
   </style>
 </head>
 <body>
+  <div id="top">
+    <input type="text">
+    <button type="submit">Download</button>
+  </div>
   <div id="editor"></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ace.min.js"></script>
   <script>
