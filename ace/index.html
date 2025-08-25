@@ -6,10 +6,9 @@
   <title>Ace</title>
   <meta http-equiv="cache-control" content="no-cache">
   <style>
-    body > div {
-      transition: 0.75s;
-    }
     #top {
+      display: flex;
+      align-items: center;
       position: absolute;
       top: 0;
       left: 0;
@@ -28,7 +27,7 @@
 </head>
 <body>
   <div id="top">
-    <input type="text">
+    <input type="text" placeholder="File Name">
     <button type="submit">Download</button>
   </div>
   <div id="editor"></div>
