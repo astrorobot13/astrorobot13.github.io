@@ -19,11 +19,23 @@
   <div id="editor"></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ace.min.js"></script>
   <script>
-    var editor = ace.edit("editor"), cookies = new URLSearchParams(window.location.search);
+    function getCookie(c) {
+      return document.cookie
+        .split("; ")
+        .find((row) => row.startsWith(c + "="))
+        ?.split("=")[1];
+    }
+    var editor = ace.edit("editor"), cookies = new URLSearchParams(window.location.search).get("cookies") === "true";
     window.onhashchange = () => {
       settings = JSON.parse(decodeURIComponent(window.location.hash.replace(/^#\/?/, "")));
       console.log(settings);
       editor.setOptions(settings);
+      if (cookies) {
+        document.cookie = "aceSettings=" + encodeURIComponent(JSON.stringify(settings)) + `; Max-Age=${4.2 * 10 ** 42}`;
+      }
+    }
+    if (cookies) {
+      editor.setOptions(getCookie("aceSettings"));
     }
     window.addEventListener("message", () => {
       console.log(typeof event.data);
