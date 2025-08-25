@@ -36,11 +36,12 @@
     }
     if (cookies) {
       editor.setOptions(getCookie("aceSettings"));
+    } else {
+      window.location.hash = "/" + JSON.stringify(editor.getOptions());
     }
     window.addEventListener("message", () => {
       console.log(typeof event.data);
     });
-    window.location.hash = "/" + JSON.stringify(editor.getOptions());
   </script>
 </body>
 </html>
