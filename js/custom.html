@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Script</title>
+</head>
+<body>
+  <input type="file">
+  <script>
+    document.querySelector("input").oninput = () => {
+      xy = document.createElement("script");
+      xy.src = URL.createObjectURL(event.target.files[0]);
+      document.body.appendChild(xy);
+      xy.onload = () => {
+        URL.revokeObjectURL(event.target.src);
+      }
+    }
+  </script>
+</body>
+</html>
