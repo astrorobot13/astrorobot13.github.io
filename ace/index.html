@@ -44,7 +44,9 @@
     }
     try {
     if (cookies) {
-      editor.setOptions(JSON.parse(window.localStorage.getItem("aceSettings")));
+      json = window.localStorage.getItem("aceSettings");
+      editor.setOptions(JSON.parse(json));
+      window.location.hash = "/" + json;
     } else {
       window.location.hash = "/" + JSON.stringify(editor.getOptions());
     }
