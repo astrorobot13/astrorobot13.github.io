@@ -35,7 +35,7 @@
       }
     }
     if (cookies) {
-      editor.setOptions(JSON.parse(decodeURIComponent(("aceSettings"))));
+      editor.setOptions(JSON.parse(decodeURIComponent(getCookie("aceSettings"))));
     } else {
       window.location.hash = "/" + JSON.stringify(editor.getOptions());
     }
