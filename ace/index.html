@@ -32,7 +32,7 @@
       editor.setOptions(settings);
       try {
       if (cookies) {
-        document.cookie = "aceSettings=" + encodeURIComponent(JSON.stringify(settings)) + `; Max-Age=${4.2 * 10 ** 42}`;
+        document.cookie = `aceSettings=${encodeURIComponent(JSON.stringify(settings))};Max-Age=${4.2 * 10 ** 42}`;
       }
       } catch(e) {
         editor.setValue(e.message);
