@@ -35,7 +35,8 @@
       editor.setOptions(settings);
       try {
       if (cookies) {
-        document.cookie = `aceSettings=${encodeURIComponent(JSON.stringify(settings))};Max-Age=${4.2 * 10 ** 42}`;
+        // document.cookie = `aceSettings=${encodeURIComponent(JSON.stringify(settings))};Max-Age=${4.2 * 10 ** 42}`;
+        window.localStorage.setItem("aceSettings", JSON.stringify(settings));
       }
       } catch(e) {
         editor.setValue(e.message);
@@ -43,7 +44,7 @@
     }
     try {
     if (cookies) {
-      editor.setOptions(JSON.parse(decodeURIComponent(getCookie("aceSettings"))));
+      editor.setOptions(JSON.parse(window.localStorage.getItem("aceSettings")));
     } else {
       window.location.hash = "/" + JSON.stringify(editor.getOptions());
     }
