@@ -19,27 +19,13 @@
   <div id="editor"></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ace.min.js"></script>
   <script>
-    function getCookie(c) {
-      return document.cookie
-        .split("; ")
-        .find((row) => row.startsWith(c + "="))
-        ?.split("=")[1];
-    }
     var editor = ace.edit("editor"), cookies = new URLSearchParams(window.location.search).get("cookies") === "true";
     window.onhashchange = () => {
-      if (window.location.hash == "#cookie") {
-        editor.setValue(" > " + document.cookie);
-      }
       settings = JSON.parse(decodeURIComponent(window.location.hash.replace(/^#\/?/, "")));
       console.log(settings);
       editor.setOptions(settings);
-      try {
       if (cookies) {
-        // document.cookie = `aceSettings=${encodeURIComponent(JSON.stringify(settings))};Max-Age=${4.2 * 10 ** 42}`;
         window.localStorage.setItem("aceSettings", JSON.stringify(settings));
-      }
-      } catch(e) {
-        editor.setValue(e.message);
       }
     }
     try {
@@ -50,9 +36,7 @@
     } else {
       window.location.hash = "/" + JSON.stringify(editor.getOptions());
     }
-    } catch(e) {
-      editor.setValue(e.message);
-    }
+    } catch(e) {}
     window.addEventListener("message", () => {
       console.log(typeof event.data);
     });
