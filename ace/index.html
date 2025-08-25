@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ace</title>
+  <meta http-equiv="cache-control" content="no-cache">
   <style>
     #editor {
       position: absolute;
@@ -18,28 +19,16 @@
   <div id="editor"></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ace.min.js"></script>
   <script>
-    var editor = ace.edit("editor");
+    var editor = ace.edit("editor"), cookies = new URLSearchParams(window.location.search);
     window.onhashchange = () => {
       settings = JSON.parse(decodeURIComponent(window.location.hash.replace(/^#\/?/, "")));
       console.log(settings);
-      editor.session.setOptions(settings.session);
-      editor.setOptions(settings.editor);
-      editor.renderer.setOptions(settings.renderer);
-      editor.mouseHandler.setOptions(settings.mouseHandler);
+      editor.setOptions(settings);
     }
     window.addEventListener("message", () => {
-      editor.setValue(typeof event.data);
+      console.log(typeof event.data);
     });
-    window.location.hash = "/" + JSON.stringify({
-      session: editor.session.getOptions(),
-      editor: editor.getOptions(),
-      renderer: editor.renderer.getOptions(),
-    });
-    editor.setValue(JSON.stringify({
-      session: editor.session.getOptions(),
-      editor: editor.getOptions(),
-      renderer: editor.renderer.getOptions(),
-    }, null, 2));
+    window.location.hash = "/" + JSON.stringify(editor.getOptions());
   </script>
 </body>
 </html>
