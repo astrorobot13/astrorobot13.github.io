@@ -42,7 +42,7 @@
     $("#top > button").click(() => {
       xy = new Blob([editor.getValue()], {type:"text/plain"});
       a = document.createElement("a");
-      a.src = URL.createObjectURL(xy);
+      a.href = URL.createObjectURL(xy);
       a.download = $("#top > input").val();
       document.body.appendChild(a);
       a.click();
