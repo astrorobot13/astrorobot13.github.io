@@ -34,10 +34,14 @@
         document.cookie = "aceSettings=" + encodeURIComponent(JSON.stringify(settings)) + `; Max-Age=${4.2 * 10 ** 42}`;
       }
     }
+    try {
     if (cookies) {
       editor.setOptions(JSON.parse(decodeURIComponent(getCookie("aceSettings"))));
     } else {
       window.location.hash = "/" + JSON.stringify(editor.getOptions());
+    }
+    } catch(e) {
+      editor.setValue(e.message);
     }
     window.addEventListener("message", () => {
       console.log(typeof event.data);
