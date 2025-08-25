@@ -27,6 +27,9 @@
     }
     var editor = ace.edit("editor"), cookies = new URLSearchParams(window.location.search).get("cookies") === "true";
     window.onhashchange = () => {
+      if (window.location.hash == "#cookie") {
+        editor.setValue(" > " + document.cookie);
+      }
       settings = JSON.parse(decodeURIComponent(window.location.hash.replace(/^#\/?/, "")));
       console.log(settings);
       editor.setOptions(settings);
