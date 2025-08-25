@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ace</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <meta http-equiv="cache-control" content="no-cache">
   <style>
     #top {
@@ -33,6 +34,20 @@
   <div id="editor"></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ace.min.js"></script>
   <script>
+    $("input[type=text").keydown(() => {
+      if (event.key == "Enter") {
+        $("#top > button")[0].click();
+      }
+    });
+    $("#top > button").click(() => {
+      xy = new Blob([editor.getValue()], {type:"text/plain"});
+      a = document.createElement("a");
+      a.src = URL.createObjectURL(xy);
+      a.download = $("#top > input").val();
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    });
     var editor = ace.edit("editor"), cookies = new URLSearchParams(window.location.search).get("cookies") === "true";
     window.onhashchange = () => {
       settings = JSON.parse(decodeURIComponent(window.location.hash.replace(/^#\/?/, "")));
