@@ -50,6 +50,7 @@
       <input type="text" placeholder="File Name">
       <button type="submit">Download</button>
     </div>
+    <button id="open">Open file</button>
     <button class="material-symbols-rounded">close</button>
   </div>
   <div id="editor"></div>
@@ -76,6 +77,16 @@
         top: 0;
       }`);
       editor.resize();
+    });
+    $("#open").click(() => {
+      xy = document.createElement("input");
+      xy.setAttribute("type", "file");
+      xy.oninput = () => {
+        event.target.files[0].text().then((d) => {
+          editor.setValue(d);
+        });
+      }
+      xy.click();
     });
     var editor = ace.edit("editor"), cookies = new URLSearchParams(window.location.search).get("cookies") === "true";
     $("button.material-symbols-rounded")[0].click();
