@@ -84,6 +84,11 @@
       xy.oninput = () => {
         event.target.files[0].text().then((d) => {
           editor.setValue(d);
+          if (cookies) {
+            json = window.localStorage.getItem("aceSettings");
+            editor.setOptions(JSON.parse(json));
+            window.location.hash = "/" + json;
+          }
         });
       }
       xy.click();
