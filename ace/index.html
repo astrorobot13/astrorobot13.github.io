@@ -67,6 +67,12 @@
     });
     $("button.material-symbols-rounded").click(() => {
       $("#top").hide();
+      xy = document.createElement("style");
+      xy.innerHTML = `
+      #editor {
+        top: 0;
+      }`;
+      document.head.appendChild(xy);
     });
     var editor = ace.edit("editor"), cookies = new URLSearchParams(window.location.search).get("cookies") === "true";
     window.onhashchange = () => {
