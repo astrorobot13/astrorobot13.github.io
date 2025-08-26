@@ -28,8 +28,9 @@
       height: 25px;
       overflow: hidden;
       background-color: #202022;
+      color: white;
     }
-    #top > div {
+    #download_container {
       display: flex;
       align-items: center;
     }
@@ -79,7 +80,7 @@
     var editor = ace.edit("editor"), cookies = new URLSearchParams(window.location.search).get("cookies") === "true";
     $("button.material-symbols-rounded")[0].click();
     window.onhashchange = () => {
-      if (window.location.hash.match(/#\/?save/)) {
+      if (window.location.hash.match(/#\/?save1?/)) {
         $("#top").show();
         $("#editorCSS").html("");
         editor.resize(); 
