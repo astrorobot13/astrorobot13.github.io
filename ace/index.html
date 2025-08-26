@@ -27,6 +27,7 @@
       right: 0;
       height: 25px;
       overflow: hidden;
+      background-color: #202022;
     }
     #top > div {
       display: flex;
@@ -76,6 +77,7 @@
       editor.resize();
     });
     var editor = ace.edit("editor"), cookies = new URLSearchParams(window.location.search).get("cookies") === "true";
+    $("button.material-symbols-rounded")[0].click();
     window.onhashchange = () => {
       if (window.location.hash.match(/#\/?save/)) {
         $("#top").show();
