@@ -62,7 +62,9 @@
       }
     });
     $("#download_container > button").click(() => {
-      xy = new Blob([editor.getValue()], {type:"text/plain"});
+      ext = $("#download_container > input").val().split(".");
+      ext = "." + ext[ext.length - 1];
+      xy = new Blob([editor.getValue()], { type: mimes[ext] || "text/plain" });
       a = document.createElement("a");
       a.href = URL.createObjectURL(xy);
       a.download = $("#download_container > input").val();
@@ -95,7 +97,12 @@
       }
       xy.click();
     });
-    var editor = ace.edit("editor"), cookies = new URLSearchParams(window.location.search).get("cookies") === "true";
+    var editor = ace.edit("editor"), cookies = new URLSearchParams(window.location.search).get("cookies") === "true", mimes, xhr = new XMLHttpRequest();
+    xhr.open("GET", "https://gist.githubusercontent.com/AshHeskes/6038140/raw/27c8b1e28ce4c3aff0c0d8d3d7dbcb099a22c889/file-extension-to-mime-types.json");
+    xhr.onload = () => {
+      mimes = JSON.parse(xhr.responseText);
+    };
+    xhr.send();
     $("button.material-symbols-rounded")[0].click();
     window.onhashchange = () => {
       if (window.location.hash.match(/#\/?save1?/)) {
