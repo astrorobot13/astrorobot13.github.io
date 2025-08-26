@@ -40,6 +40,7 @@
       right: 0;
     }
   </style>
+  <style id="editorCSS"></style>
 </head>
 <body>
   <div id="top">
@@ -68,16 +69,19 @@
     });
     $("button.material-symbols-rounded").click(() => {
       $("#top").hide();
-      xy = document.createElement("style");
-      xy.innerHTML = `
+      $("#editorCSS").html(`
       #editor {
         top: 0;
-      }`;
-      document.head.appendChild(xy);
+      }`);
       editor.resize();
     });
     var editor = ace.edit("editor"), cookies = new URLSearchParams(window.location.search).get("cookies") === "true";
     window.onhashchange = () => {
+      if (window.location.hash.match(/#\/?save/)) {
+        $("#top").show();
+        $("#editorCSS").html("");
+        editor.resize(); 
+      }
       settings = JSON.parse(decodeURIComponent(window.location.hash.replace(/^#\/?/, "")));
       console.log(settings);
       editor.setOptions(settings);
