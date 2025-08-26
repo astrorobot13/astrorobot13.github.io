@@ -237,6 +237,7 @@
       $("input[type=radio").click(() => {
         $("#display")[0].style.textAlign = event.target.value;
       });*/
+      try {
       function getMetadata(file) {
         return new Promise((resolve) => {
           jsmediatags.read(file, {
@@ -503,6 +504,9 @@
             $("meta[name=viewport]")[0].setAttribute("content", "width=device-width, initial-scale=1.0");
           }
         });
+      }
+      } catch(e) {
+        $("pre").text(e.message);
       }
     </script>
   </body>
