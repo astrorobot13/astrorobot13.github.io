@@ -82,6 +82,8 @@
       xy = document.createElement("input");
       xy.setAttribute("type", "file");
       xy.oninput = () => {
+        $("input[type=text]").val(event.target.files[0].name);
+        editor.setValue("Loading file...");
         event.target.files[0].text().then((d) => {
           editor.setValue(d);
           if (cookies) {
