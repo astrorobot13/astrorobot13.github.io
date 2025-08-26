@@ -73,6 +73,7 @@
         top: 0;
       }`;
       document.head.appendChild(xy);
+      editor.resize();
     });
     var editor = ace.edit("editor"), cookies = new URLSearchParams(window.location.search).get("cookies") === "true";
     window.onhashchange = () => {
