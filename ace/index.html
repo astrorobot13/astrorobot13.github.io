@@ -98,9 +98,10 @@
       mimes = JSON.parse(xhr.responseText);
     };
     xhr.send();
-    noTop = cookies.get("noTop") === "true";
+    if (cookies.get("noTop") === "true") {
+      $("button.material-symbols-rounded")[0].click();
+    }
     cookies = cookies.get("cookies") === "true";
-    $("button.material-symbols-rounded")[0].click();
     window.onhashchange = () => {
       if (window.location.hash.match(/#\/?save/)) {
         $("#top").show();
