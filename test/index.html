@@ -246,13 +246,20 @@
         2: success
         3: fail
         */
-        parse: () => {
-          
+        parse: async function(file) {
+          bytes = await file.bytes();
+          tags = loadTags(bytes);
+          artwork = loadImage(bytes);
+          tags.artwork = [{
+            bytes: new Uint8Array(artwork.data),
+            type: artwork.mime_type
+          }];
+          return tags;
         }
       }
       try {
       async function getMetadata(file) {
-        return id3.parse(file);
+        return await id3.parse(file);
       }
       WebAssembly.instantiateStreaming(
         fetch("/wasm-tag/main.wasm"),
