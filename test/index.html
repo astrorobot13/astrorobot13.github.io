@@ -267,6 +267,7 @@
             delete meta[i];
           }
         }
+        meta.fileName = file.name;
         return meta;
       }
       WebAssembly.instantiateStreaming(
