@@ -92,7 +92,7 @@
       }
       xy.click();
     });
-    var editor = ace.edit("editor"), cookies = new URLSearchParams(window.location.search), noTop, mimes, xhr = new XMLHttpRequest();
+    var editor = ace.edit("editor"), cookies = new URLSearchParams(window.location.search), mimes, xhr = new XMLHttpRequest();
     xhr.open("GET", "https://gist.githubusercontent.com/AshHeskes/6038140/raw/27c8b1e28ce4c3aff0c0d8d3d7dbcb099a22c889/file-extension-to-mime-types.json");
     xhr.onload = () => {
       mimes = JSON.parse(xhr.responseText);
