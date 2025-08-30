@@ -250,16 +250,24 @@
           bytes = await file.bytes();
           tags = loadTags(bytes);
           artwork = loadImage(bytes);
+          try {
           tags.artwork = [{
             bytes: new Uint8Array(artwork.data),
             type: artwork.mime_type
           }];
+          } catch(e) {}
           return tags;
         }
       }
       try {
       async function getMetadata(file) {
-        return await id3.parse(file);
+        meta = await id3.parse(file);
+        for (i in meta) {
+          if (!["title", "artist", "album", "artwork"].includes(i)) {
+            delete meta[i];
+          }
+        }
+        return meta;
       }
       WebAssembly.instantiateStreaming(
         fetch("/wasm-tag/main.wasm"),
@@ -270,7 +278,7 @@
       }, (result) => {
         id3.readyState = 3;
       });
-        id3.readyState = 1;
+      id3.readyState = 1;
       // https://github.com/drag-drop-touch-js/dragdroptouch/blob/master/demo/index.js
       function swapDom(a, b) {
         let aParent = a.parentNode;
