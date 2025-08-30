@@ -58,7 +58,7 @@
   <script>
     $("input[type=text").keydown(() => {
       if (event.key == "Enter") {
-        $("#top > button")[0].click();
+        event.target.nextElementSibling.click();
       }
     });
     $("#download_container > button").click(() => {
@@ -100,6 +100,19 @@
     xhr.send();
     if (cookies.get("noTop") === "true") {
       $("button.material-symbols-rounded")[0].click();
+    }
+    if (cookies.get("noShortcuts") !== "true") {
+      $(document).keydown(() => {
+        if (event.ctrlKey) {
+          if (event.key == "s") {
+            event.preventDefault();
+            $("button[type=submit]")[0].click();
+          } else if (event.key == "o") {
+            event.preventDefault();
+            $("button")[0].click();
+          }
+        }
+      });
     }
     cookies = cookies.get("cookies") === "true";
     window.onhashchange = () => {
