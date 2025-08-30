@@ -422,6 +422,7 @@
                   }]
                 }
                 element = document.getElementsByName(meta.fileName)[0];
+                meta.artwork[0].src = URL.createObjectURL(new Blob([meta.artwork[0].bytes], {type:meta.artwork[0].type}));
                 element.innerHTML = `
                 <img src="${meta.artwork[0].src}">
                 <div>
