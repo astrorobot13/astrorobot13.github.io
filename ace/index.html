@@ -133,11 +133,9 @@
         window.localStorage.setItem("aceSettings", JSON.stringify(settings));
       }
     }
-    //window.addEventListener("hashchange", ab);
     try {
     if (cookies) {
       if (window.location.hash) {
-        window.onhashchange();
       } else {
         json = window.localStorage.getItem("aceSettings");
         editor.setOptions(JSON.parse(json));
