@@ -135,13 +135,19 @@
     }
     try {
     if (cookies) {
-      json = window.localStorage.getItem("aceSettings");
-      editor.setOptions(JSON.parse(json));
-      window.location.hash = "/" + json;
+      if (window.location.hash) {
+        window.onhashchange();
+      } else {
+        json = window.localStorage.getItem("aceSettings");
+        editor.setOptions(JSON.parse(json));
+        window.location.hash = "/" + json;
+      }
     } else {
       window.location.hash = "/" + JSON.stringify(editor.getOptions());
     }
-    } catch(e) {}
+    } catch(e) {
+      editor.setValue(e.message);
+    }
     window.addEventListener("message", () => {
       console.log(typeof event.data);
     });
