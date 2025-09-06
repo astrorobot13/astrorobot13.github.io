@@ -115,7 +115,7 @@
       });
     }
     cookies = cookies.get("cookies") === "true";
-    ab = () => {
+    window.onhashchange = () => {
       if (window.location.hash.match(/#\/?save/)) {
         $("#top").show();
         $("#editorCSS").html("");
@@ -133,7 +133,7 @@
         window.localStorage.setItem("aceSettings", JSON.stringify(settings));
       }
     }
-    window.addEventListener("hashchange", ab);
+    //window.addEventListener("hashchange", ab);
     try {
     if (cookies) {
       if (window.location.hash) {
