@@ -128,24 +128,18 @@
           editor.setOptions(JSON.parse(json));
           window.location.hash = "/" + json;
         }
-      }
-      settings = JSON.parse(decodeURIComponent(window.location.hash.replace(/^#\/?/, "")));
-      console.log(settings);
-      editor.setOptions(settings);
-      if (cookies) {
-        window.localStorage.setItem("aceSettings", JSON.stringify(settings));
+      } else {
+        settings = JSON.parse(decodeURIComponent(window.location.hash.replace(/^#\/?/, "")));
+        console.log(settings);
+        editor.setOptions(settings);
+        if (cookies) {
+          window.localStorage.setItem("aceSettings", JSON.stringify(settings));
+        }
       }
     }
     try {
-    if (cookies) {
-      if (window.location.hash) {
-      } else {
-        json = window.localStorage.getItem("aceSettings");
-        editor.setOptions(JSON.parse(json));
-        window.location.hash = "/" + json;
-      }
-    } else {
-      window.location.hash = "/" + JSON.stringify(editor.getOptions());
+    if (window.location.hash) {
+      window.onhashchange();
     }
     } catch(e) {
       editor.setValue(e.message);
