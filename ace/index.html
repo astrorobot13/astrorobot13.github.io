@@ -43,6 +43,7 @@
     }
   </style>
   <style id="editorCSS"></style>
+  <style id="topCSS"></style>
 </head>
 <body>
   <div id="top">
@@ -54,7 +55,8 @@
     <button class="material-symbols-rounded">close</button>
   </div>
   <div id="editor"></div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ace.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ace.min.js"></script><!--
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ext-themelist.min.js"></script>-->
   <script>
     $("input[type=text").keydown(() => {
       if (event.key == "Enter") {
@@ -70,6 +72,7 @@
       a.download = $("#download_container > input").val();
       document.body.appendChild(a);
       a.click();
+      URL.revokeObjectURL(a.href);
       a.remove();
     });
     $("button.material-symbols-rounded").click(() => {
