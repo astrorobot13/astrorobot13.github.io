@@ -140,6 +140,10 @@
     try {
     if (window.location.hash) {
       window.onhashchange();
+    } else if (cookies) {
+      settings = window.localStorage.getItem("aceSettings");
+      editor.setOptions(JSON.parse(settings));
+      window.location.hash = settings;
     }
     } catch(e) {
       editor.setValue(e.message);
