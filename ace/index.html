@@ -55,8 +55,8 @@
     <button class="material-symbols-rounded">close</button>
   </div>
   <div id="editor"></div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ace.min.js"></script><!--
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ext-themelist.min.js"></script>-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ace.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ext-themelist.min.js"></script>
   <script>
     $("input[type=text").keydown(() => {
       if (event.key == "Enter") {
@@ -92,19 +92,21 @@
         event.target.files[0].text().then((d) => {
           editor.setValue(d);
         });
+        var mode = modelist.getModeForPath(event.target.files[0].name).mode;
+        editor.setOptions(mode);
       }
       xy.click();
     });
-    var editor = ace.edit("editor"), cookies = new URLSearchParams(window.location.search), mimes, xhr = new XMLHttpRequest();
+    var editor = ace.edit("editor"), args = new URLSearchParams(window.location.search), mimes, xhr = new XMLHttpRequest(), modelist = ace.require("ace/ext/modelist");
     xhr.open("GET", "https://gist.githubusercontent.com/AshHeskes/6038140/raw/27c8b1e28ce4c3aff0c0d8d3d7dbcb099a22c889/file-extension-to-mime-types.json");
     xhr.onload = () => {
       mimes = JSON.parse(xhr.responseText);
     };
     xhr.send();
-    if (cookies.get("noTop") === "true") {
+    if (args.get("noTop") === "true") {
       $("button.material-symbols-rounded")[0].click();
     }
-    if (cookies.get("noShortcuts") !== "true") {
+    if (args.get("noShortcuts") !== "true") {
       $(document).keydown(() => {
         if (event.ctrlKey) {
           if (event.key == "s") {
@@ -117,7 +119,7 @@
         }
       });
     }
-    cookies = cookies.get("cookies") === "true";
+    const cookies = args.get("cookies") === "true";
     window.onhashchange = () => {
       if (window.location.hash.match(/#\/?save/)) {
         $("#top").show();
@@ -132,7 +134,7 @@
         settings = JSON.parse(decodeURIComponent(window.location.hash.replace(/^#\/?/, "")));
         console.log(settings);
         editor.setOptions(settings);
-        if (cookies) {
+        if (args) {
           window.localStorage.setItem("aceSettings", JSON.stringify(settings));
         }
       }
