@@ -93,7 +93,7 @@
         event.target.files[0].text().then((d) => {
           editor.setValue(d);
           try {
-            var mode = modelist.getModeForPath(event.target.files[0].name).mode;
+            var mode = modelist.getModeForPath($("input[type=text]").val().files[0].name).mode;
             editor.setMode(mode);
           } catch(e) {
             editor.setValue(e.message)
