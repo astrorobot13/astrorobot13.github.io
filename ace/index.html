@@ -64,6 +64,9 @@
         event.target.nextElementSibling.click();
       }
     });
+    $("input[type=text").on("blur", () => {
+      setOptions({ mode: modelist.getModeForPath(event.target.value).mode });
+    });
     $("#download_container > button").click(() => {
       ext = $("#download_container > input").val().split(".");
       ext = "." + ext[ext.length - 1];
