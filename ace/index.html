@@ -94,7 +94,7 @@
           editor.setValue(d);
           try {
             var mode = modelist.getModeForPath($("input[type=text]").val()).mode;
-            editor.setMode(mode);
+            editor.session.setMode(mode);
           } catch(e) {
             editor.setValue(e.message)
           }
