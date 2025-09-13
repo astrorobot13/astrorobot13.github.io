@@ -89,25 +89,26 @@
       xy.setAttribute("type", "file");
       xy.oninput = () => {
         $("input[type=text]").val(event.target.files[0].name);
+        setOptions({ mode: "ace/mode/text" });
         editor.setValue("Loading file...");
         event.target.files[0].text().then((d) => {
           editor.setValue(d);
-          try {
-            if (window.location.hash) {
-              settings = JSON.parse(decodeURIComponent(window.location.hash.replace(/^#\/?/, "")));
-              settings.mode = modelist.getModeForPath($("input[type=text]").val()).mode;
-              window.location.hash = "/" + JSON.stringify(settings);
-            } else {
-              window.location.hash = `/{"mode":"${modelist.getModeForPath($("input[type=text]").val()).mode}"}`;
-            }
-            window.onhashchange();
-          } catch(e) {
-            editor.setValue(e.message);
-          }
+          setOptions({ mode: modelist.getModeForPath($("input[type=text]").val()).mode });
         });
       }
       xy.click();
     });
+    function setOptions(options) {
+      settings = {};
+      if (window.location.hash) {
+        settings = JSON.parse(decodeURIComponent(window.location.hash.replace(/^#\/?/, "")));
+      }
+      for (i in options) {
+        settings[i] = options[i];
+      }
+      window.location.hash = "/" + JSON.stringify(settings);
+      window.onhashchange();
+    }
     var editor = ace.edit("editor"), args = new URLSearchParams(window.location.search), mimes, xhr = new XMLHttpRequest(), modelist = ace.require("ace/ext/modelist");
     xhr.open("GET", "https://gist.githubusercontent.com/AshHeskes/6038140/raw/27c8b1e28ce4c3aff0c0d8d3d7dbcb099a22c889/file-extension-to-mime-types.json");
     xhr.onload = () => {
