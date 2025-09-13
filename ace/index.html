@@ -93,10 +93,16 @@
         event.target.files[0].text().then((d) => {
           editor.setValue(d);
           try {
-            var mode = modelist.getModeForPath($("input[type=text]").val()).mode;
-            editor.session.setMode(mode);
+            if (window.location.hash) {
+              settings = JSON.parse(decodeURIComponent(window.location.hash.replace(/^#\/?/, "")));
+              settings.mode = modelist.getModeForPath($("input[type=text]").val()).mode;
+              window.location.hash = "/" + JSON.stringify(settings);
+            } else {
+              window.location.hash = `/{"mode":"${modelist.getModeForPath($("input[type=text]").val()).mode}"}`;
+            }
+            window.onhashchange();
           } catch(e) {
-            editor.setValue(e.message)
+            editor.setValue(e.message);
           }
         });
       }
