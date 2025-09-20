@@ -65,7 +65,7 @@
     } else {
       $("input")[0].remove();
     }
-    $("input").keydown(() => {
+    $("input").on("input", () => {
       navigator.setAppBadge(parseInt(event.target.value));
       window.localStorage.setItem("badge", event.target.value);
     });
