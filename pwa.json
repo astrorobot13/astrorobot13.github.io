@@ -1,0 +1,19 @@
+{
+  "short_name": "App",
+  "icons": [
+    {
+      "src": "/images/icon128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "start_url": "/pwa.html",
+  "display": "standalone",
+  "theme_color": "#202022",
+  "background_color": "#202022"
+}
