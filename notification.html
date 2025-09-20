@@ -18,7 +18,7 @@
     }
     #install {
       display: none;
-    }
+    }/*
     @media not (display-mode: standalone) {
       #install ~ * {
         display: none;
@@ -26,7 +26,7 @@
       #install {
         display: block;
       }
-    }
+    }*/
   </style>
 </head>
 <body>
@@ -36,14 +36,13 @@
   <h1>Notifications</h1>
   <button>Request Permission</button>
   <pre></pre>
+  <input type="number">
   <script>
     $("button").click(function() {
       if (Notification.permission == "granted") {
         n = new Notification("This is a title.", { 
           body: "This is the body.", 
-          vibrate: [1000, 500, 1000],
           requireInteraction: true,
-          tag: "abc"
         });
       } else {
         Notification.requestPermission((result) => {
@@ -61,6 +60,15 @@
     if (Notification.permission == "granted") {
       $("button").text("Send Notification");
     }
+    if (navigator.setAppBadge) {
+      $("input")[0].value = window.localStorage.getItem("badge");
+    } else {
+      $("input")[0].remove();
+    }
+    $("input").keydown(() => {
+      navigator.setAppBadge(parseInt(event.target.value));
+      window.localStorage.setItem("badge", event.target.value);
+    });
   </script>
 </body>
 </html>
