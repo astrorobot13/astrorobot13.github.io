@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>102.9 The Whale</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <style>
+    .material-symbols-rounded {
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body {
+      background-color: #202022;
+      color: white;
+      font-family: "Roboto", sans-serif;
+    }
+    a {
+      margin: 1em 0;
+    }
+    a:link, a:visited {
+      display: block;
+      color: white;
+      margin: 1em 0;
+    }
+    a:hover {
+      color: #006ccc;
+    }
+    a:active {
+      color: #f62d1b;
+    }
+    img {
+      width: 7.75em;
+      height: 7.75em;
+      margin-right: 1.28em;
+      border: none;
+      background-color: white;
+    }
+    #meta {
+      display: flex;
+      font-size: 1rem;
+      max-width: fit-content;
+    }
+    #meta > div {
+      display: flex;
+      flex-direction: column;
+      font-size: 1em;
+      justify-content: center;
+      max-width: fit-content;
+    }
+    #meta > div > p {
+      display: flex;
+      align-items: center;
+      font-size: 1em;
+      margin: 0.35em 0;
+    }
+    #meta > div > p > .material-symbols-rounded {
+      margin-right: 0.45em;
+    }
+    #m3u8 > label {
+      font-size: 16px;
+    }
+    #white {
+      background-color: white;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+    #m3u8 > :not(.show) {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <fieldset>
+    <legend>Audio</legend>
+    <audio controls autoplay></audio><br>
+    <input type="radio" name="station" station="102.9 The Whale" value="https://crystalout.surfernetwork.com:8001/WDRC-FM_MP3">
+    <label>WDRC</label><br>
+    <input type="radio" name="station" station="Radio 104.1" value="https://crystalout.surfernetwork.com:8001/WMRQ_MP3">
+    <label>WMRQ</label><br><!--
+    <input type="radio" name="station" station="100.7 WZLX" value="https://stream.revma.ihrhls.com/zc7730">
+    <label>WZLX</label><br>-->
+    <input type="radio" name="station" station="94.5 The Buzz" value="https://stream.revma.ihrhls.com/zc2281">
+    <label>KTBZ</label>
+    <div id="meta">
+      <img id="album-art">
+      <div>
+        <p><span class="material-symbols-rounded">music_note</span><span id="title"></span></p>
+        <p><span class="material-symbols-rounded">person</span><span id="artist"></span></p>
+        <p><span class="material-symbols-rounded">library_music</span><span id="album"></span></p>
+      </div>
+    </div>
+    <input type="number">
+    <button type="submit">Enter</button>
+    <p onclick="timer.clear();" id="timer"></p>
+  </fieldset>
+  <fieldset id="m3u8">
+    <legend class="show">m3u8</legend>
+    <input type="radio" name="m3u8" value="7730">
+    <label>WZLX</label><br>
+    <input type="radio" name="m3u8" value="2281" checked>
+    <label>KTBZ</label><br>
+    <input class="show" type="checkbox">
+    <label class="show">Update</label><br class="show">
+    <input class="show" type="checkbox">
+    <label class="show">Spot Block End notification</label>
+    <pre class="show" onclick="event.target.innerHTML = '';"></pre>
+    <!--<input type="checkbox" id="notification">
+    <label>Spot Block End notification</label>-->
+  </fieldset>
+  <script src="https://astrorobot13.github.io/script/timer.js"></script>
+  <script>
+    stationInfo = {};
+    function xhrPromise(url, options={method:"GET",headers:{},type:"text"}) {
+      return new Promise((resolve) => {
+        xhr = new XMLHttpRequest();
+        xhr.open(options.method, url);
+        for (i in options.headers) {
+          xhr.setRequestHeader(i, options.headers[i]);
+        }
+        xhr.responseType = options.type;
+        xhr.onload = () => {
+          resolve(xhr);
+        }
+        xhr.send();
+      });
+    }
+    async function lightningStreamMeta(call, defaultMeta) {
+      try {
+        source = (await xhrPromise(`https://lightningstream.com/BBridge.asmx/GetPlaylistCV?call=${call}&accesskey=tKVktWzN3KI=&debug=true&songlistcount=1`, {method:"GET",headers:{},type:"document"})).responseXML.firstChild.childNodes[0].nodeValue;
+        source = JSON.parse(source)[0];
+        source1 = {
+          title: source.title,
+          artist: source.artist,
+          album: "",
+          CoverLargeUrl: source.coverlarge
+        };
+        source = JSON.parse((await xhrPromise(`https://lightningstream.com/BBridge.asmx/GetAT?call=${call}&accesskey=tKVktWzN3KI=&debug=true&artist=${source.artist.toUpperCase()}&title=${source.title.toUpperCase()}`, {method:"GET",headers:{},type:"document"})).responseXML.firstChild.childNodes[0].nodeValue);
+        source.title = source.SongTitle;
+        if ([undefined, ""].includes(source.title)) {
+          source = source1;
+        } else {
+          source.artist = source.Artist;
+          source.album = source.AlbumTitle;
+        }
+        if (source.CoverLargeUrl == "") {
+          source.CoverLargeUrl = defaultMeta.artwork[0].src;
+        }
+        source.artwork = [
+          {
+            src: source.CoverLargeUrl,
+            sizes: "180x180",
+            type: source.imageType
+          }
+        ];
+        return source;
+      } catch(e) {
+        console.log(e);
+        return defaultMeta;
+      }
+    }
+    function updateMeta() {
+      const audio = $("audio")[0];
+      if (audio.src.match("WDRC-FM")) {
+        setMeta({
+          title: "102.9 The Whale",
+          artist: "Connecticut's Classic Rock",
+          artwork: [{
+            src: "https://cdn-profiles.tunein.com/s28332/images/logod.png",
+            sizes: "300x300",
+            type: "image/png"
+          }]
+        });
+      } else if (audio.src.match("WMRQ")) {
+        lightningStreamMeta("wmrq", {
+          title: "Radio 104.1",
+          artwork: [{ src: "https://cdn-radiotime-logos.tunein.com/s21226d.png" }]
+        }).then((source) => {
+          setMeta(source);
+        });
+      } else if (audio.src) {
+        $.get(`https://api.iheart.com/api/v3/live-meta/stream/${audio.src.match(/[0-9]+/)[0]}/currentTrackMeta?defaultMetadata=true`, (source) => {
+          try {
+            if (source.artist == "Goo Goo Dolls") {
+              source.artist = "The Goo Goo Dolls";
+            }
+            setMeta({
+              title: source.title,
+              artist: source.artist,
+              album: source.album,
+              artwork: [{
+                src: source.imagePath
+              }]
+            });
+          } catch(e) {
+            setMeta(stationInfo[audio.src.match(/[0-9]+/)[0]]);
+          }
+        });
+      }
+    }
+    function setMeta(meta) {
+      navigator.mediaSession.metadata = new MediaMetadata(meta);
+      for (i of ["title", "artist", "album"]) {
+        $(`#${i}`).text(meta[i] || "");
+      }
+      try {
+        $("#album-art")[0].src = meta.artwork[0].src || "data:image/png,";
+      } catch(e) {
+        $("#album-art")[0].src = "data:image/png,";
+      }
+    }
+    let m3u8_url = "/404";
+    function update_m3u8() {
+      if ($("input[type=checkbox]")[0].checked) {
+        $.get(m3u8_url, (source) => {
+          $("pre").text(source);
+          for (i of document.querySelectorAll("#m3u8 > label")) {
+            i.style.fontSize = "16px";
+          }
+          if (source.match("Spot Block End") && $("#notification")[0].checked) {
+            xy = new Notification("Spot Block End");
+          }
+        });
+      }
+    }
+    setInterval(update_m3u8, 10000); 
+    $("#m3u8 > input:not(#notification)").on("input", () => {
+      if ($("input[type=checkbox]")[0].checked) {
+        $("pre").text("ac");
+        $.get(`https://stream.revma.ihrhls.com/zc${$("#m3u8 > :checked").val()}/hls.m3u8`, (source) => {
+          m3u8_url = source.replaceAll(/#.*|\n/g, "");
+          update_m3u8();
+        });
+      }
+    });
+    $.get("https://api.iheart.com/api/v2/content/liveStations/2281", (source) => {
+      for (i of source.hits) {
+        stationInfo[i.id.toString()] = {
+          title: i.name,
+          artist: i.description,
+          artwork: [{
+            src: i.logo
+          }]
+        }
+      }
+    });
+    $("input[name=station]").on("input", () => {
+      $("audio")[0].src = event.target.value;
+      document.title = event.target.getAttribute("station");
+    });
+    $("audio").on("play", updateMeta);
+    function addButtons() {
+      event.target.removeEventListener("play", addButtons);
+      navigator.mediaSession.setActionHandler("nexttrack", () => {
+        xy = document.querySelectorAll("[name=station]");
+        for (i = 0; i < xy.length; i++) {
+          if (xy[i].checked) {
+            try {
+              xy[i + 1].click();
+            } catch(e) {
+              xy[0].click();
+            }
+            break;
+          }
+        }
+      });
+      navigator.mediaSession.setActionHandler("previoustrack", () => {
+        xy = document.querySelectorAll("[name=station]");
+        for (i = 0; i < xy.length; i++) {
+          if (xy[i].checked) {
+            try {
+              xy[i - 1].click();
+            } catch(e) {
+              xy[xy.length - 1].click();
+            } 
+            break;
+          }
+        }
+      });
+    }
+    $("audio").on("play", addButtons);
+    setInterval(updateMeta, 5000);
+    time = new Date();
+    if (time.getHours() == 7 && time.getMinutes() == 0) {
+      time = document.createElement("div");
+      time.id = "white";
+      time.onclick = () => {
+        event.target.remove();
+        $("input[type=radio]")[0].click();
+      }
+      document.body.appendChild(time);
+    }
+    $("input[type=number]").keydown(() => {
+      if (event.key == "Enter") {
+        $("button[type=submit]")[0].click();
+      }
+    })
+    $("button[type=submit]").click(() => {
+      try {
+      timer.set(parseFloat($("input[type=number]").val()));
+      } catch(e) {
+        $("pre").text(e.message);
+      }
+    });
+    timer = new Timer();
+    timer.display = document.querySelector("#timer");
+  </script>
+</body>
+</html>
