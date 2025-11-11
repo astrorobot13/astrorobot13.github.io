@@ -54,7 +54,6 @@
     }
   </style>
   <style id="editorCSS"></style>
-  <style id="topCSS"></style>
 </head>
 <body>
   <div id="top">
@@ -66,8 +65,7 @@
     <button class="material-symbols-rounded">close</button>
   </div>
   <div id="editor"></div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ace.min.js"></script><!--
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ext-themelist.min.js"></script>-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ace.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ext-modelist.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ext-language_tools.min.js"></script>
   <script>
@@ -77,7 +75,7 @@
       }
     });
     $("input[type=text").on("blur", () => {
-      setOptions({ mode: modelist.getModeForPath(event.target.value).mode });
+      editor.setOptions({ mode: modelist.getModeForPath(event.target.value).mode });
     });
     $("#download_container > button").click(() => {
       ext = $("#download_container > input").val().split(".");
