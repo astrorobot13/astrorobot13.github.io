@@ -125,6 +125,18 @@
       $("button.material-symbols-rounded")[0].click();
     }
     if (args.get("noShortcuts") !== "true") {
+      /*
+editor.commands.addCommand({
+    name: 'myCommand',
+    bindKey: {win: 'Ctrl-M',  mac: 'Command-M'},
+    exec: function(editor) {
+        //...
+    },
+    readOnly: true, // false if this command should not apply in readOnly mode
+    // multiSelectAction: "forEach", optional way to control behavior with multiple cursors
+    // scrollIntoView: "cursor", control how cursor is scolled into view after the command
+});
+      */
       $(document).keydown(() => {
         if (event.ctrlKey) {
           if (event.key == "s") {
