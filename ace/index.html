@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=close&family=Roboto:ital@0;1&display=swap"/>
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <meta http-equiv="cache-control" content="no-cache">
   <style>
     body {
@@ -30,6 +30,8 @@
       right: 0;
       height: 24px;
       overflow: hidden;
+    }
+    #top:has(~ .ace_dark) {
       background-color: #202022;
       color: white;
     }
@@ -75,7 +77,7 @@
       }
     });
     $("input[type=text").on("blur", () => {
-      editor.setOptions({ mode: modelist.getModeForPath(event.target.value).mode });
+      editor.setOption("mode", modelist.getModeForPath(event.target.value).mode);
     });
     $("#download_container > button").click(() => {
       ext = $("#download_container > input").val().split(".");
@@ -102,26 +104,17 @@
       xy.setAttribute("type", "file");
       xy.oninput = () => {
         $("input[type=text]").val(event.target.files[0].name);
-        setOptions({ mode: "ace/mode/text" });
+        editor.setOption("mode", "ace/mode/text");
         editor.setValue("Loading file...");
+        el = event.target;
         event.target.files[0].text().then((d) => {
+          el.remove();
           editor.setValue(d);
-          setOptions({ mode: modelist.getModeForPath($("input[type=text]").val()).mode });
+          editor.setOption("mode", modelist.getModeForPath($("input[type=text]").val()).mode);
         });
       }
       xy.click();
     });
-    function setOptions(options) {
-      settings = {};
-      if (window.location.hash) {
-        settings = JSON.parse(decodeURIComponent(window.location.hash.replace(/^#\/?/, "")));
-      }
-      for (i in options) {
-        settings[i] = options[i];
-      }
-      window.location.hash = "/" + JSON.stringify(settings);
-      window.onhashchange();
-    }
     ace.require("ace/ext/language_tools");
     var editor = ace.edit("editor"), args = new URLSearchParams(window.location.search), mimes, xhr = new XMLHttpRequest(), modelist = ace.require("ace/ext/modelist");
     xhr.open("GET", "https://gist.githubusercontent.com/AshHeskes/6038140/raw/27c8b1e28ce4c3aff0c0d8d3d7dbcb099a22c889/file-extension-to-mime-types.json");
@@ -134,7 +127,7 @@
     }
     if (args.get("noShortcuts") !== "true") {
       editor.commands.addCommand({
-        name: 'myCommand',
+        name: 'Save',
         bindKey: { win: 'Ctrl-S',  mac: 'Ctrl-S' },
         readOnly: true,
         exec: function(editor) {
@@ -143,7 +136,7 @@
         },
       });
       editor.commands.addCommand({
-        name: 'myCommand',
+        name: 'Open File',
         bindKey: { win: 'Ctrl-O',  mac: 'Ctrl-O' },
         readOnly: true,
         exec: function(editor) {
@@ -159,6 +152,8 @@
         editor.resize();
       } else if (window.location.hash.match(/#\/?saveSettings$/)) {
         window.localStorage.setItem("aceSettings", JSON.stringify(editor.getOptions()));
+      } else if (window.location.hash.match(/#\/?deleteSavedSettings$/)) {
+        window.localStorage.removeItem("aceSettings");
       }
     }
     if (window.location.hash) {
