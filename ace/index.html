@@ -163,6 +163,9 @@
     if (args) {
       editor.setOptions(JSON.parse(args));
     } else {
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        editor.setOption("theme", "ace/theme/tomorrow_night");
+      }
       editor.setOptions({
         enableBasicAutocompletion: true,
         enableSnippets: true,
