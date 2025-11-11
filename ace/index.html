@@ -61,6 +61,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ace.min.js"></script><!--
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ext-themelist.min.js"></script>-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ext-modelist.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ext-language_tools.min.js"></script>
   <script>
     $("input[type=text").keydown(() => {
       if (event.key == "Enter") {
@@ -115,12 +116,18 @@
       window.location.hash = "/" + JSON.stringify(settings);
       window.onhashchange();
     }
+    ace.require("ace/ext/language_tools");
     var editor = ace.edit("editor"), args = new URLSearchParams(window.location.search), mimes, xhr = new XMLHttpRequest(), modelist = ace.require("ace/ext/modelist");
     xhr.open("GET", "https://gist.githubusercontent.com/AshHeskes/6038140/raw/27c8b1e28ce4c3aff0c0d8d3d7dbcb099a22c889/file-extension-to-mime-types.json");
     xhr.onload = () => {
       mimes = JSON.parse(xhr.responseText);
     };
     xhr.send();
+    editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: false
+    });
     if (args.get("noTop") === "true") {
       $("button.material-symbols-rounded")[0].click();
     }
