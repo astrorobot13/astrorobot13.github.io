@@ -127,69 +127,50 @@
       mimes = JSON.parse(xhr.responseText);
     };
     xhr.send();
-    editor.setOptions({
-      enableBasicAutocompletion: true,
-      enableSnippets: true,
-      enableLiveAutocompletion: true
-    });
     if (args.get("noTop") === "true") {
       $("button.material-symbols-rounded")[0].click();
     }
     if (args.get("noShortcuts") !== "true") {
-      /*
-editor.commands.addCommand({
-    name: 'myCommand',
-    bindKey: {win: 'Ctrl-M',  mac: 'Command-M'},
-    exec: function(editor) {
-        //...
-    },
-    readOnly: true, // false if this command should not apply in readOnly mode
-    // multiSelectAction: "forEach", optional way to control behavior with multiple cursors
-    // scrollIntoView: "cursor", control how cursor is scolled into view after the command
-});
-      */
-      $(document).keydown(() => {
-        if (event.ctrlKey) {
-          if (event.key == "s") {
-            event.preventDefault();
-            $("button[type=submit]")[0].click();
-          } else if (event.key == "o") {
-            event.preventDefault();
-            $("#top > button")[0].click();
-          }
-        }
+      editor.commands.addCommand({
+        name: 'myCommand',
+        bindKey: { win: 'Ctrl-S',  mac: 'Ctrl-S' },
+        readOnly: true,
+        exec: function(editor) {
+          event.preventDefault();
+          $("button[type=submit]")[0].click();
+        },
+      });
+      editor.commands.addCommand({
+        name: 'myCommand',
+        bindKey: { win: 'Ctrl-O',  mac: 'Ctrl-O' },
+        readOnly: true,
+        exec: function(editor) {
+          event.preventDefault();
+          $("#top > button")[0].click();
+        },
       });
     }
-    const cookies = args.get("cookies") === "true";
     window.onhashchange = () => {
-      if (window.location.hash.match(/#\/?save/)) {
+      if (window.location.hash.match(/#\/?save$/)) {
         $("#top").show();
         $("#editorCSS").html("");
         editor.resize();
-        if (cookies) {
-          json = window.localStorage.getItem("aceSettings");
-          editor.setOptions(JSON.parse(json));
-          window.location.hash = "/" + json;
-        }
-      } else {
-        settings = JSON.parse(decodeURIComponent(window.location.hash.replace(/^#\/?/, "")));
-        console.log(settings);
-        editor.setOptions(settings);
-        if (args) {
-          window.localStorage.setItem("aceSettings", JSON.stringify(settings));
-        }
+      } else if (window.location.hash.match(/#\/?saveSettings$/)) {
+        window.localStorage.setItem("aceSettings", JSON.stringify(editor.getOptions()));
       }
     }
-    try {
     if (window.location.hash) {
       window.onhashchange();
-    } else if (cookies) {
-      settings = window.localStorage.getItem("aceSettings");
-      editor.setOptions(JSON.parse(settings));
-      window.location.hash = settings;
     }
-    } catch(e) {
-      editor.setValue(e.message);
+    args = window.localStorage.getItem("aceSettings");
+    if (args) {
+      editor.setOptions(JSON.parse(args));
+    } else {
+      editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: true
+      });
     }
     window.addEventListener("message", () => {
       console.log(typeof event.data);
