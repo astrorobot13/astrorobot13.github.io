@@ -156,9 +156,6 @@
         window.localStorage.removeItem("aceSettings");
       }
     }
-    if (window.location.hash) {
-      window.onhashchange();
-    }
     args = window.localStorage.getItem("aceSettings");
     if (args) {
       editor.setOptions(JSON.parse(args));
@@ -171,6 +168,9 @@
         enableSnippets: true,
         enableLiveAutocompletion: true
       });
+    }
+    if (window.location.hash) {
+      window.onhashchange();
     }
     window.addEventListener("message", () => {
       console.log(typeof event.data);
