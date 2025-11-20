@@ -46,7 +46,8 @@ class Timer {
     clearInterval(this.interval);
     this.display.innerHTML = "0:00";
   };
-  constructor(displayElement=null) {
+  constructor(displayElement=null, onended=() => {}) {
     this.display = displayElement;
+    this.onend = onended;
   }
 }
