@@ -1,0 +1,9 @@
+{
+  "name": "Editor",
+  "icons": [{
+    "src": "https://dummyimage.com/512/202022/fff",
+    "sizes": "512x512 any"
+  }],
+  "start_url": "editor.html",
+  "display": "standalone"
+}
