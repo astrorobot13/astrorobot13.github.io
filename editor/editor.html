@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <meta http-equiv="cache-control" content="no-cache">
+  <style>
+    body {
+      font-family: "Roboto", sans-serif;
+      font-size: 12px;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: 0;
+      display: grid;
+      grid-template-rows: 36px 36px auto;
+      grid-template-columns: 1fr 3fr;
+      background-color: #181818;
+    }
+    body > div:not(#editor) {
+      border: 1px solid grey;
+    }/*
+    #editor {
+      position: absolute;
+      top: 80px;
+      left: calc(33vw + 4px);
+      right: 0;
+      bottom: 0;
+    }*//*
+    button.material-symbols-rounded {
+      margin: 0;
+      padding: 0;
+      background: none;
+      border: none;
+      color: inherit;
+    }
+    #top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 24px;
+      overflow: hidden;
+    }
+    #top:has(~ .ace_dark) {
+      background-color: #202022;
+      color: white;
+    }
+    #download_container {
+      display: flex;
+      align-items: center;
+    }
+    #editor {
+      position: absolute;
+      top: 24px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }*/
+    #ace_settingsmenu {
+      font-size: 14px;
+      line-height: 150%;
+    }
+    .ace_dark ~ div > #ace_settingsmenu {
+      background-color: #202022;
+      color: white;
+    }
+  </style>
+  <style id="editorCSS"></style>
+</head>
+<body>
+  <!--
+  ------------------------------------------
+  |           palette (fixed: h)           | 1
+  ------------------------------------------
+  |(fixed: |  tabs (fixed: h)              | 2
+  | w)     |-------------------------------|
+  |        |  editor                       |
+  |        |                               |
+  |        |                               | 3
+  |        |                               |
+  |        |                               |
+  |        |                               |
+  ------------------------------------------
+      1                    2
+  -->
+  <div style="grid-column: 1 / 3;"></div>
+  <div style="grid-row: 2 / 4;"></div>
+  <div style="grid-column: 2 / 3;"></div>
+  <div id="editor"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ace.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ext-modelist.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ext-language_tools.min.js"></script>
+  <script>
+    ace.require("ace/ext/language_tools");
+    editor = ace.edit("editor");
+    options = window.localStorage.getItem("aceSettings");
+    if (options) {
+      editor.setOptions(JSON.parse(options));
+    } else {
+      editor.setOptions({
+        theme: "ace/theme/tomorrow_night",
+        showPrintMargin: false,
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: true
+      });
+    }
+  </script><!--
+  <div id="top">
+    <div id="download_container">
+      <input type="text" placeholder="File Name">
+      <button type="submit">Download</button>
+    </div>
+    <button id="open">Open file</button>
+    <button class="material-symbols-rounded">close</button>
+  </div>
+  <div id="editor"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ace.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ext-modelist.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ext-language_tools.min.js"></script>
+  <script>
+    $("input[type=text").keydown(() => {
+      if (event.key == "Enter") {
+        event.target.nextElementSibling.click();
+      }
+    });
+    $("input[type=text").on("blur", () => {
+      editor.setOption("mode", modelist.getModeForPath(event.target.value).mode);
+    });
+    $("#download_container > button").click(() => {
+      ext = $("#download_container > input").val().split(".");
+      ext = "." + ext[ext.length - 1];
+      xy = new Blob([editor.getValue()], { type: mimes[ext] || "text/plain" });
+      a = document.createElement("a");
+      a.href = URL.createObjectURL(xy);
+      a.download = $("#download_container > input").val();
+      document.body.appendChild(a);
+      a.click();
+      URL.revokeObjectURL(a.href);
+      a.remove();
+    });
+    $("button.material-symbols-rounded").click(() => {
+      $("#top").hide();
+      $("#editorCSS").html(`
+      #editor {
+        top: 0;
+      }`);
+      editor.resize();
+    });
+    $("#open").click(() => {
+      xy = document.createElement("input");
+      xy.setAttribute("type", "file");
+      xy.oninput = () => {
+        $("input[type=text]").val(event.target.files[0].name);
+        editor.setOption("mode", "ace/mode/text");
+        editor.setValue("Loading file...");
+        el = event.target;
+        event.target.files[0].text().then((d) => {
+          el.remove();
+          editor.setValue(d);
+          editor.setOption("mode", modelist.getModeForPath($("input[type=text]").val()).mode);
+        });
+      }
+      xy.click();
+    });
+    ace.require("ace/ext/language_tools");
+    var editor = ace.edit("editor"), args = new URLSearchParams(window.location.search), mimes, xhr = new XMLHttpRequest(), modelist = ace.require("ace/ext/modelist");
+    xhr.open("GET", "https://gist.githubusercontent.com/AshHeskes/6038140/raw/27c8b1e28ce4c3aff0c0d8d3d7dbcb099a22c889/file-extension-to-mime-types.json");
+    xhr.onload = () => {
+      mimes = JSON.parse(xhr.responseText);
+    };
+    xhr.send();
+    if (args.get("noTop") === "true") {
+      $("button.material-symbols-rounded")[0].click();
+    }
+    if (args.get("noShortcuts") !== "true") {
+      editor.commands.addCommand({
+        name: 'Save',
+        bindKey: { win: 'Ctrl-S',  mac: 'Ctrl-S' },
+        readOnly: true,
+        exec: function(editor) {
+          event.preventDefault();
+          $("button[type=submit]")[0].click();
+        },
+      });
+      editor.commands.addCommand({
+        name: 'Open File',
+        bindKey: { win: 'Ctrl-O',  mac: 'Ctrl-O' },
+        readOnly: true,
+        exec: function(editor) {
+          event.preventDefault();
+          $("#top > button")[0].click();
+        },
+      });
+    }
+    window.onhashchange = () => {
+      if (window.location.hash.match(/#\/?save$/)) {
+        $("#top").show();
+        $("#editorCSS").html("");
+        editor.resize();
+      } else if (window.location.hash.match(/#\/?saveSettings$/)) {
+        window.localStorage.setItem("aceSettings", JSON.stringify(editor.getOptions()));
+      } else if (window.location.hash.match(/#\/?deleteSavedSettings$/)) {
+        window.localStorage.removeItem("aceSettings");
+      }
+    }
+    args = window.localStorage.getItem("aceSettings");
+    if (args) {
+      editor.setOptions(JSON.parse(args));
+    } else {
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        editor.setOption("theme", "ace/theme/tomorrow_night");
+      }
+      editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: true
+      });
+    }
+    if (window.location.hash) {
+      window.onhashchange();
+    }
+    window.addEventListener("message", () => {
+      console.log(typeof event.data);
+    });
+  </script>-->
+</body>
+</html>
