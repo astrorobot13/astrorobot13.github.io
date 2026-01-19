@@ -6,14 +6,19 @@
   <title>Editor</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap">
-  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjE5IiB3aWR0aD0iMTkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRleHQgZm9udC1zaXplPSIxNnB4IiB5PSIxNiI+8J+TnTwvdGV4dD48L3N2Zz4=">
+  <link rel="manifest" href="https://astrorobot13.github.io/editor/manifest.json">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ace.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ext-modelist.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ext-language_tools.min.js"></script>
   <meta http-equiv="cache-control" content="no-cache">
   <style>
     body {
       font-family: "Roboto", sans-serif;
       font-size: 12px;
+      color: white;
       position: absolute;
       top: 0;
       bottom: 0;
@@ -25,9 +30,66 @@
       grid-template-columns: 1fr 3fr;
       background-color: #202022;
     }
-    body > div:not(#editor) {
+    button.material-symbols-rounded {
+      margin: 0;
+      padding: 0;
+      background: none;
+      border: none;
+      color: inherit;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    #search, #sidebar, #tabs {
       border: 1px solid grey;
-    }/*
+    }
+    #search {
+      grid-column: 1 / 3;
+      border-bottom-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #search > input {
+      padding: 3px;
+      height: 14px;
+      width: 50%;
+      border-radius: 6px;
+      background-color: transparent;
+    }
+    #sidebar {
+      grid-row: 2 / 4;
+      position: relative;
+    }
+    #collapseSidebar {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      z-index: 999;
+    }
+    #tabs {
+      grid-column: 2 / 3;
+      border-left-width: 0;
+      display: flex;
+      white-space: nowrap;
+      overflow: scroll;
+    }
+    #tabs > div {
+      height: 100%;
+      padding-left: 12px;
+      padding-right: 6px;
+      border-right: 1px solid grey;
+      display: flex;
+      align-items: center;
+    }
+    #tabs > div > button {
+      font-size: 18px;
+      padding-left: 1px;
+    }
+    #tabs > div > img {
+      height: 12px;
+      padding-right: 6px;
+    }
+    /*
     #editor {
       position: absolute;
       top: 80px;
@@ -76,33 +138,52 @@
       background-color: #202022;
       color: white;
     }
+    .ace_prompt_container {
+      margin-top: 9px;
+    }
+    :has(> .ace_prompt_container) {
+      background-color: transparent;
+    }
   </style>
   <style id="editorCSS"></style>
 </head>
 <body>
-  <!--
-  ------------------------------------------
-  |           palette (fixed: h)           | 1
-  ------------------------------------------
-  |(fixed: |  tabs (fixed: h)              | 2
-  | w)     |-------------------------------|
-  |        |  editor                       |
-  |        |                               |
-  |        |                               | 3
-  |        |                               |
-  |        |                               |
-  |        |                               |
-  ------------------------------------------
-      1                    2
-  -->
-  <div id="search" style="grid-column: 1 / 3;"></div>
-  <div id="sidebar" style="grid-row: 2 / 4;"></div>
-  <div id="tabs" style="grid-column: 2 / 3;"></div>
+  <div id="search"><!--
+    <button class="material-symbols-rounded">menu</button>-->
+    <input type="text" placeholder="Command Palette">
+  </div>
+  <div id="sidebar">
+    <button id="collapseSidebar" class="material-symbols-rounded">chevron_left</button>
+  </div>
+  <div id="tabs">
+    <div>
+      <img src="https://placecats.com/250/250">
+      <span contenteditable="plaintext-only">Untitled-1</span>
+      <button class="material-symbols-rounded">close</button>
+    </div>
+    <div>
+      <img src="https://placecats.com/738/738">
+      <span contenteditable="plaintext-only">a very long file name</span>
+      <button class="material-symbols-rounded">close</button>
+    </div>
+    <div>
+      <img src="https://placecats.com/562/562">
+      <span contenteditable="plaintext-only">another very long file name</span>
+      <button class="material-symbols-rounded">close</button>
+    </div>
+  </div>
   <div id="editor"></div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ace.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ext-modelist.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ext-language_tools.min.js"></script>
   <script>
+    $("#collapseSidebar").click((event) => {
+      if (event.target.innerHTML == "chevron_left") {
+        event.target.innerHTML = "chevron_right";
+        $("body").css("grid-template-columns", "24px auto");
+      } else {
+        event.target.innerHTML = "chevron_left";
+        $("body").css("grid-template-columns", "1fr 3fr");
+      }
+      editor.resize();
+    })
     ace.require("ace/ext/language_tools");
     editor = ace.edit("editor");
     options = window.localStorage.getItem("aceSettings");
@@ -117,6 +198,25 @@
         enableLiveAutocompletion: true
       });
     }
+    $(document).keydown((event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key == ",") {
+        event.preventDefault();
+      } else if ((event.metaKey || event.ctrlKey) && event.key == "n") {
+        event.preventDefault();
+        // new tab
+      } else if ((event.metaKey || event.ctrlKey) && event.key == "o") {
+        event.preventDefault();
+        // open file 
+      }
+    })
+    editor.commands.addCommand({
+      name: 'event.preventDefault()',
+      bindKey: { win: 'Ctrl-,',  mac: 'Cmd-,' },
+      readOnly: true,
+      exec: function(editor) {
+        event.preventDefault();
+      },
+    });
   </script><!--
   <div id="top">
     <div id="download_container">
