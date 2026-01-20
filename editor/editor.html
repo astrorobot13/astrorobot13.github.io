@@ -39,6 +39,32 @@
       user-select: none;
       -webkit-user-select: none;
     }
+    #menu {
+      position: absolute;
+      left: 0;
+      top: 37px;
+      border: 1px solid grey;
+      border-radius: 6px;
+      background-color: #202022;
+      display: none;
+      z-index: 999999;
+    }
+    #menu tr:hover {
+      background-color: lightblue;
+      color: black;
+    }
+    #menu td {
+      border-radius: 3px;
+    }
+    #menu td:nth-of-type(1) {
+      min-width: 144px;
+    }
+    #menu td:nth-of-type(2) {
+      color: #aaa;
+    }
+    #menu tr:hover > td:nth-of-type(2) {
+      color: #444;
+    }
     #search, #sidebar, #tabs {
       border: 1px solid grey;
     }
@@ -47,7 +73,7 @@
       border-bottom-width: 0;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
     }
     #search > input {
       padding: 3px;
@@ -89,48 +115,20 @@
     #tabs > div > img {
       height: 12px;
       padding-right: 6px;
-    }
-    /*
-    #editor {
-      position: absolute;
-      top: 80px;
-      left: calc(33vw + 4px);
-      right: 0;
-      bottom: 0;
-    }*//*
-    button.material-symbols-rounded {
-      margin: 0;
-      padding: 0;
-      background: none;
-      border: none;
-      color: inherit;
-    }
-    #top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 24px;
-      overflow: hidden;
-    }
-    #top:has(~ .ace_dark) {
-      background-color: #202022;
-      color: white;
-    }
-    #download_container {
-      display: flex;
-      align-items: center;
-    }
-    #editor {
-      position: absolute;
-      top: 24px;
-      bottom: 0;
-      left: 0;
-      right: 0;
+    }/*
+    #input[type=file] {
+      display: none;
     }*/
+    #alert {
+      background-color: yellow;
+      color: black;
+      position: absolute;
+      top: 75px;
+      right: 0;
+      z-index: 999999;
+      max-width: 25%;
+      padding: 3px;
+    }
     #ace_settingsmenu {
       font-size: 14px;
       line-height: 150%;
@@ -142,51 +140,174 @@
     .ace_prompt_container {
       margin-top: 9px;
     }
-    :has(> .ace_prompt_container) {
-      background-color: transparent;
-    }
   </style>
   <style id="editorCSS"></style>
 </head>
 <body>
-  <div id="search"><!--
-    <button class="material-symbols-rounded">menu</button>-->
+  <table id="menu">
+    <tr id="open">
+      <td>Open File</td>
+      <td>Ctrl+O</td>
+    </tr>
+    <tr id="save">
+      <td>Save</td>
+      <td>Ctrl+S</td>
+    </tr>
+  </table>
+  <div id="search">
+    <button id="showMenu" class="material-symbols-rounded">menu</button>
     <input type="text" placeholder="Command Palette">
+    <div style="width: 24px;"></div>
   </div>
   <div id="sidebar">
     <button id="collapseSidebar" class="material-symbols-rounded">chevron_left</button>
   </div>
   <div id="tabs">
-    <div>
-      <img src="https://placecats.com/250/250">
+    <div style="background-color: rgba(255, 255, 255, 0.07);">
+      <img src="https://placecats.com/500/500">
       <span contenteditable="plaintext-only">Untitled-1</span>
-      <button class="material-symbols-rounded">close</button>
-    </div>
-    <div>
-      <img src="https://placecats.com/738/738">
-      <span contenteditable="plaintext-only">a very long file name</span>
-      <button class="material-symbols-rounded">close</button>
-    </div>
-    <div>
-      <img src="https://placecats.com/562/562">
-      <span contenteditable="plaintext-only">another very long file name</span>
       <button class="material-symbols-rounded">close</button>
     </div>
   </div>
   <div id="editor"></div>
   <script>
+    tabs = {
+      timeout: 0
+    };
+    function ontabclick(event) {
+      if (event.target.tagName != "BUTTON") {
+        el = event.target;
+        if (event.target.tagName != "DIV") {
+          el = event.target.parentElement;
+        }
+        editor.setSession(tabs[el.id]);
+        $("#tabs > div").css("background-color", "initial");
+        el.style.backgroundColor = "rgba(255, 255, 255, 0.07)";
+      }
+    };
+    function ontabclose(event) {
+      if ($("#tabs")[0].childElementCount == 1) {
+        editor.setValue("");
+        editor.session.setMode("ace/mode/text");
+        event.target.previousElementSibling.innerHTML = "Untitled-1";
+      } else {
+        tab = event.target.parentElement;
+        delete tabs[editor.session.id];
+        if (tab.id == editor.session.id) {
+          try {
+            tab.previousElementSibling.click();
+          } catch(e) {
+            tab.nextElementSibling.click();
+          }
+        }
+        tab.remove();
+      }
+    }
     $("#collapseSidebar").click((event) => {
       if (event.target.innerHTML == "chevron_left") {
         event.target.innerHTML = "chevron_right";
-        $("body").css("grid-template-columns", "24px auto");
+        $("body").css("grid-template-columns", "26px auto");
       } else {
         event.target.innerHTML = "chevron_left";
         $("body").css("grid-template-columns", "1fr 3fr");
       }
       editor.resize();
-    })
+    });
+    $("#showMenu").click((event) => {
+      if (event.target.innerHTML == "menu") {
+        $("#menu").show();
+        event.target.innerHTML = "close";
+      } else {
+        $("#menu").hide();
+        event.target.innerHTML = "menu";
+      }
+    });
+    $("#open").click(() => {
+      xy = document.createElement("input");
+      xy.setAttribute("type", "file");
+      xy.oninput = async (event) => {
+        let arr = new Uint8Array(16), base64 = "timeout";
+        while (base64 in tabs) {
+          for (i = 0; i < arr.length; i++) {
+            arr[i] = Math.floor(Math.random() * 256);
+          }
+          base64 = arr.toBase64().split("=")[0].replaceAll("+", "-").replaceAll("/", "_");
+        }
+        div = document.createElement("div");
+        div.id = base64;
+        $("#tabs > div").css("background-color", "initial");
+        div.style.backgroundColor = "rgba(255, 255, 255, 0.07)";
+        el = document.createElement("img");
+        rand = Math.floor(Math.random() * (1000 - 250)) + 250;
+        el.src = `https://placecats.com/${rand}/${rand}`;
+        div.appendChild(el);
+        el = document.createElement("span");
+        el.innerText = event.target.files[0].name;
+        el.setAttribute("contenteditable", "plaintext-only");
+        div.appendChild(el);
+        el.onkeydown = (event) => {
+          if (event.key == "Enter") {
+            event.preventDefault();
+            event.target.blur();
+          }
+        }
+        el = document.createElement("button");
+        el.className = "material-symbols-rounded";
+        el.innerHTML = "close";
+        div.appendChild(el);
+        tabs.timeout = setTimeout(() => {
+          div = document.createElement("div");
+          div.id = "alert";
+          div.innerHTML = "Loading the file is taking longer than expected.";
+          document.body.appendChild(div);
+          div.onclick = (event) => {
+            event.target.remove();
+          }
+        }, 750);
+        tabs[base64] = ace.createEditSession(await event.target.files[0].text());
+        tabs[base64].id = base64;
+        clearTimeout(tabs.timeout);
+        $("#tabs")[0].appendChild(div);
+        el.onclick = ontabclose;
+        div.onclick = ontabclick;
+        editor.setSession(tabs[base64]);
+        tabs[base64].setMode(modelist.getModeForPath(div.querySelector("span").innerText).mode);
+        try {
+          document.querySelector("#alert").remove();
+        } catch(e) {}
+      }
+      xy.click();
+    });
+    $("#save").click(() => {
+      try {
+      ext = $(`#${editor.session.id} > span`).text().split(".");
+      ext = "." + ext[ext.length - 1];
+      xy = new Blob([editor.getValue()], { type: mimes[ext] || "text/plain" });
+      a = document.createElement("a");
+      a.href = URL.createObjectURL(xy);
+      a.download = $(`#${editor.session.id} > span`).text();
+      document.body.appendChild(a);
+      a.click();
+      URL.revokeObjectURL(a.href);
+      a.remove();
+      } catch(e) {
+        $("#sidebar").text(`${e.name}: ${e.message}`);
+      }
+    });
     ace.require("ace/ext/language_tools");
-    editor = ace.edit("editor");
+    var editor = ace.edit("editor"), mimes, xhr = new XMLHttpRequest(), modelist = ace.require("ace/ext/modelist"), arr = new Uint8Array(16);
+    xhr.open("GET", "https://gist.githubusercontent.com/AshHeskes/6038140/raw/27c8b1e28ce4c3aff0c0d8d3d7dbcb099a22c889/file-extension-to-mime-types.json");
+    xhr.onload = () => {
+      mimes = JSON.parse(xhr.responseText);
+    };
+    xhr.send();
+    for (var i = 0; i < arr.length; i++) {
+      arr[i] = Math.floor(Math.random() * 256);
+    }
+    $("#tabs > div").click(ontabclick);
+    $("#tabs > div")[0].id = arr.toBase64().split("=")[0].replaceAll("+", "-").replaceAll("/", "_");
+    tabs[$("#tabs > div")[0].id] = editor.session;
+    $("#tabs > div > button").click(ontabclose);
     options = window.localStorage.getItem("aceSettings");
     if (options) {
       editor.setOptions(JSON.parse(options));
@@ -209,14 +330,6 @@
         event.preventDefault();
         // open file 
       }
-    })
-    editor.commands.addCommand({
-      name: 'event.preventDefault()',
-      bindKey: { win: 'Ctrl-,',  mac: 'Cmd-,' },
-      readOnly: true,
-      exec: function(editor) {
-        event.preventDefault();
-      },
     });
   </script><!--
   <div id="top">
