@@ -12,7 +12,7 @@ async function networkFirst(request) {
   }
 }
 self.addEventListener("fetch", (event) => {
-  if (event.request.method == "GET") {
+  if (["GET", "HEAD", "OPTIONS"].includes(event.request.method)]) {
     event.respondWith(networkFirst(event.request));
   }
 });
