@@ -130,6 +130,10 @@
 </head>
 <body>
   <table id="menu">
+    <tr id="new">
+      <td>New File</td>
+      <td>Ctrl+N</td>
+    </tr>
     <tr id="open">
       <td>Open File</td>
       <td>Ctrl+O</td>
@@ -212,6 +216,40 @@
         $("#menu").hide();
         event.target.innerHTML = "menu";
       }
+    });
+    function newTab(name="Untitled-1", content="") {
+      let base64 = pickId();
+      div = document.createElement("div");
+      div.id = base64;
+      $("#tabs > div").css("background-color", "initial");
+      div.style.backgroundColor = "rgba(255, 255, 255, 0.07)";
+      el = document.createElement("img");
+      rand = Math.floor(Math.random() * (1000 - 250)) + 250;
+      el.src = `https://placecats.com/${rand}/${rand}`;
+      div.appendChild(el);
+      el = document.createElement("span");
+      el.innerText = event.target.files[0].name;
+      el.setAttribute("contenteditable", "plaintext-only");
+      div.appendChild(el);
+      el.onkeydown = (event) => {
+        if (event.key == "Enter") {
+          event.preventDefault();
+          event.target.blur();
+        }
+      }
+      el = document.createElement("button");
+      el.className = "material-symbols-rounded";
+      el.innerHTML = "close";
+      div.appendChild(el);
+      tabs[base64] = ace.createEditSession(content);
+      tabs[base64].id = base64;
+      $("#tabs")[0].appendChild(div);
+      el.onclick = ontabclose;
+      div.onclick = ontabclick;
+      editor.setSession(tabs[base64]);
+    }
+    $("#new").click(() => {
+      newTab();
     });
     $("#open").click(() => {
       xy = document.createElement("input");
