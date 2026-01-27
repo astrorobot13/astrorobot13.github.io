@@ -220,6 +220,7 @@
     function newTab(name="Untitled-1", content="") {
       let base64 = pickId();
       div = document.createElement("div");
+      $("#tabs")[0].appendChild(div);
       div.id = base64;
       $("#tabs > div").css("background-color", "initial");
       div.style.backgroundColor = "rgba(255, 255, 255, 0.07)";
