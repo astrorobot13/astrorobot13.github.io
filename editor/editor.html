@@ -253,7 +253,7 @@
     });
     $("#open").click(() => {
       xy = document.createElement("input");
-      xy.setAttribute("type", "file");
+      xy.setAttribute("type", "file");/*
       xy.oninput = async (event) => {
         let base64 = pickId();
         div = document.createElement("div");
@@ -298,6 +298,23 @@
         try {
           document.querySelector("#alert").remove();
         } catch(e) {}
+      }*/
+      xy.oninput = async (event) => {
+        tabs.timeout = setTimeout(() => {
+          div = document.createElement("div");
+          div.id = "alert";
+          div.innerHTML = "Loading the file is taking longer than expected.";
+          document.body.appendChild(div);
+          div.onclick = (event) => {
+            event.target.remove();
+          }
+        }, 750);
+        try {
+        newTab(event.target.files[0].name, await event.target.files[0].text());
+        } catch(e) {
+          editor.setValue(e.message);
+        }
+        clearTimeout(tabs.timeout);
       }
       xy.click();
     });
