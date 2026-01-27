@@ -218,35 +218,34 @@
       }
     });
     function newTab(name="Untitled-1", content="") {
-      let base64 = pickId();
+      $("#tabs > div").css("background-color", "initial");
       div = document.createElement("div");
       $("#tabs")[0].appendChild(div);
-      div.id = base64;
-      $("#tabs > div").css("background-color", "initial");
       div.style.backgroundColor = "rgba(255, 255, 255, 0.07)";
-      el = document.createElement("img");
       rand = Math.floor(Math.random() * (1000 - 250)) + 250;
-      el.src = `https://placecats.com/${rand}/${rand}`;
-      div.appendChild(el);
-      el = document.createElement("span");
-      el.innerText = event.target.files[0].name;
-      el.setAttribute("contenteditable", "plaintext-only");
-      div.appendChild(el);
-      el.onkeydown = (event) => {
+      div.innerHTML = `
+        <img src="https://placecats.com/${rand}/${rand}">
+        <span contenteditable="plaintext-only">${name}</span>
+        <button class="material-symbols-rounded">close</button>
+      `;
+      $(div).children("span").keydown((event) => {
         if (event.key == "Enter") {
           event.preventDefault();
           event.target.blur();
         }
-      }
-      el = document.createElement("button");
-      el.className = "material-symbols-rounded";
-      el.innerHTML = "close";
-      div.appendChild(el);
+      });
+      $(div).children("button").click(ontabclose);
+      div.onclick = ontabclick;
+      let base64 = pickId();
+      div.id = base64;
       tabs[base64] = ace.createEditSession(content);
       tabs[base64].id = base64;
-      $("#tabs")[0].appendChild(div);
-      el.onclick = ontabclose;
-      div.onclick = ontabclick;
+      try {
+        tabs[base64].setMode(modelist.getModeForPath(name).mode);
+      } catch(e) {
+        console.log(e);
+        tabs[base64].setMode("ace/mode/text");
+      }
       editor.setSession(tabs[base64]);
     }
     $("#new").click(() => {
