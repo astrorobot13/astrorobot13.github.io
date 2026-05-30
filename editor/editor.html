@@ -239,6 +239,7 @@
       let base64 = pickId();
       div.id = base64;
       tabs[base64] = ace.createEditSession(content);
+      tabs[base64].setOption("tabSize", 2);
       tabs[base64].id = base64;
       try {
         tabs[base64].setMode(modelist.getModeForPath(name).mode);
