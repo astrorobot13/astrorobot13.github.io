@@ -1,0 +1,15 @@
+<meta http-equiv="cache-control" value="no-cache">
+<body>
+<input>
+<pre></pre>
+<script>
+  document.querySelector("input").onkeydown = (event) => {
+    fetch("https://span-stranger-theater-metallic.trycloudflare.com/api/command", {
+      method: "POST",
+      body: event.target.value
+    }).then((response) => response.text())
+    .then((response) => {
+      document.querySelector("pre").innerText = response;
+    })
+  }
+</script>
